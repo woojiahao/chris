@@ -13,3 +13,7 @@ func (exp *Expression) Get(index int) *string {
 	c := strconv.Itoa(int((*exp)[index]))
 	return &c
 }
+
+func (exp *Expression) Len() int {
+	return len(*exp)
+}
