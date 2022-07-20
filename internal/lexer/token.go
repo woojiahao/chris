@@ -4,6 +4,8 @@ type TokenType int
 
 const (
 	Assignment TokenType = iota
+	Number
+	Variable
 	Add
 	Minus
 	Divide
