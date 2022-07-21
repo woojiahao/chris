@@ -6,6 +6,7 @@ const (
 	Assignment TokenType = iota
 	Number
 	Variable
+	Function
 	Add
 	Minus
 	Divide
@@ -18,5 +19,18 @@ const (
 type Token struct {
 	TokenType TokenType
 	Value     float64
-	Symbol    rune
+	Text      string
+}
+
+func NewNumber(value float64) *Token {
+	return &Token{Number, value, ""}
+}
+
+// TODO: Allow variables and functions to exist in the same name pool instead of having variables just be a single char
+func NewVariable(variable string) *Token {
+	return &Token{Variable, 0, variable}
+}
+
+func NewFunction(function string) *Token {
+	return &Token{Variable, 0, function}
 }

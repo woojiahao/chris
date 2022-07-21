@@ -34,11 +34,11 @@ func (l *Lexer) Peek() (*Token, int) {
 		if unicode.IsDigit(*cur) {
 			// Read the next few characters for the number
 			num, next := l.expression.readNumber(i)
-			l.token = &Token{Number, *num, *cur}
+			l.token = NewNumber(*num)
 			return l.token, next
 		}
 
-		l.token = &Token{Variable, 0, *cur}
+		l.token = NewVariable(string(*cur))
 		return l.token, i + 1
 	}
 
