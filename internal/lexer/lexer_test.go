@@ -24,6 +24,24 @@ func nextOnCases(cases []lexerCase, t *testing.T) {
 	}
 }
 
+func TestLexer_Next_WithVariables(t *testing.T) {
+	cases := []lexerCase{
+		{"abc", []Token{
+			*NewFunction("abc"),
+		}},
+		{"a = sin(15)", []Token{
+			*NewVariable("a"),
+			*NewOperator('='),
+			*NewFunction("sin"),
+			*NewOperator('('),
+			*NewNumber(15),
+			*NewOperator(')'),
+		}},
+	}
+
+	nextOnCases(cases, t)
+}
+
 func TestLexer_Next_NumbersOnly(t *testing.T) {
 	cases := []lexerCase{
 		{"24 39", []Token{
@@ -37,11 +55,6 @@ func TestLexer_Next_NumbersOnly(t *testing.T) {
 		{"  24   39     ", []Token{
 			{Number, 24, ""},
 			{Number, 39, ""},
-		}},
-		{"abc", []Token{
-			{Variable, 0, "a"},
-			{Variable, 0, "b"},
-			{Variable, 0, "c"},
 		}},
 	}
 

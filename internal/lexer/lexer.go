@@ -38,6 +38,11 @@ func (l *Lexer) Peek() (*Token, int) {
 		if unicode.IsDigit(*cur) {
 			// Read the next few characters for the number
 			num, next := l.expression.readNumber(i)
+			if num == nil {
+				// If failed to read number, return nil to indicate lexing failed
+				return nil, -1
+			}
+
 			l.token = NewNumber(*num)
 			return l.token, next
 		}
@@ -47,8 +52,22 @@ func (l *Lexer) Peek() (*Token, int) {
 			return l.token, i + 1
 		}
 
-		l.token = NewVariable(string(*cur))
-		return l.token, i + 1
+		if unicode.IsLetter(*cur) {
+			word, next := l.expression.readWord(i)
+			if word == nil {
+				return nil, -1
+			}
+
+			if len(*word) > 1 {
+				l.token = NewFunction(*word)
+			} else {
+				l.token = NewVariable(*word)
+			}
+			return l.token, next
+		}
+
+		// If it's not any of our valid variables, return nil to indicate that lexing failed
+		return nil, -1
 	}
 
 	return nil, -1

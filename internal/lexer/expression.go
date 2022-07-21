@@ -55,6 +55,25 @@ func (exp Expression) readNumber(start int) (*float64, int) {
 	return &num, i
 }
 
+func (exp Expression) readWord(start int) (*string, int) {
+	i := start
+	for i < exp.Len() {
+		cur := exp.Get(i)
+		if cur == nil {
+			return nil, -1
+		}
+
+		if unicode.IsLetter(*cur) {
+			i++
+		} else {
+			break
+		}
+	}
+
+	word := exp.substring(start, i-1)
+	return &word, i
+}
+
 func (exp Expression) Len() int {
 	return len(exp)
 }
