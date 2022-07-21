@@ -38,7 +38,7 @@ func (l *Lexer) Peek() (*Token, int) {
 			return l.token, next
 		}
 
-		l.token = &Token{Variable, 0, '0'}
+		l.token = &Token{Variable, 0, *cur}
 		return l.token, i + 1
 	}
 
