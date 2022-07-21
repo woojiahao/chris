@@ -5,13 +5,13 @@ import (
 )
 
 type Lexer struct {
-	expression *Expression
+	expression Expression
 	index      int
 	token      *Token
 }
 
 func New(exp Expression) *Lexer {
-	return &Lexer{&exp, 0, nil}
+	return &Lexer{exp, 0, nil}
 }
 
 // Peek reads the next non-whitespace token and returns the token and the index after reading the token
