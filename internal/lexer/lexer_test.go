@@ -85,6 +85,15 @@ func TestLexer_Next_Operators(t *testing.T) {
 			*NewOperator('='),
 			*NewNumber(10),
 		}},
+		{"(1 + 2) * 3", []Token{
+			*NewOperator('('),
+			*NewNumber(1),
+			*NewOperator('+'),
+			*NewNumber(2),
+			*NewOperator(')'),
+			*NewOperator('*'),
+			*NewNumber(3),
+		}},
 	}
 
 	nextOnCases(cases, t)

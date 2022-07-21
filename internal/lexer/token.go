@@ -50,6 +50,10 @@ func NewOperator(operator rune) *Token {
 		tokenType = Exponent
 	case '=':
 		tokenType = Assignment
+	case '(':
+		tokenType = LeftParenthesis
+	case ')':
+		tokenType = RightParenthesis
 	}
 
 	return &Token{tokenType, 0, string(operator)}
