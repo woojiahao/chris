@@ -32,18 +32,9 @@ func (exp Expression) substring(start, end int) string {
 }
 
 func (exp Expression) readNumber(start int) (*float64, int) {
-	i := start
-	for i < exp.Len() {
-		cur := exp.Get(i)
-		if cur == nil {
-			return nil, -1
-		}
-
-		if unicode.IsDigit(*cur) {
-			i++
-		} else {
-			break
-		}
+	i := exp.read(start, unicode.IsDigit)
+	if i == -1 {
+		return nil, -1
 	}
 
 	numStr := exp.substring(start, i-1)
@@ -56,18 +47,9 @@ func (exp Expression) readNumber(start int) (*float64, int) {
 }
 
 func (exp Expression) readWord(start int) (*string, int) {
-	i := start
-	for i < exp.Len() {
-		cur := exp.Get(i)
-		if cur == nil {
-			return nil, -1
-		}
-
-		if unicode.IsLetter(*cur) {
-			i++
-		} else {
-			break
-		}
+	i := exp.read(start, unicode.IsLetter)
+	if i == -1 {
+		return nil, -1
 	}
 
 	word := exp.substring(start, i-1)
@@ -76,4 +58,22 @@ func (exp Expression) readWord(start int) (*string, int) {
 
 func (exp Expression) Len() int {
 	return len(exp)
+}
+
+// read continues to read the next character until a given predicate is false
+func (exp Expression) read(i int, predicate func(rune) bool) int {
+	for i < exp.Len() {
+		cur := exp.Get(i)
+		if cur == nil {
+			return -1
+		}
+
+		if predicate(*cur) {
+			i++
+		} else {
+			break
+		}
+	}
+
+	return i
 }
