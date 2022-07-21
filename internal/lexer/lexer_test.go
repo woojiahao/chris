@@ -24,15 +24,15 @@ func nextOnCases(cases []lexerCase, t *testing.T) {
 	}
 }
 
-func TestLexer_Next_WithVariables(t *testing.T) {
+func TestLexer_Next_WithVariablesAndKeywords(t *testing.T) {
 	cases := []lexerCase{
 		{"abc", []Token{
-			*NewFunction("abc"),
+			*NewKeyword("abc"),
 		}},
 		{"a = sin(15)", []Token{
 			*NewVariable("a"),
 			*NewOperator('='),
-			*NewFunction("sin"),
+			*NewKeyword("sin"),
 			*NewOperator('('),
 			*NewNumber(15),
 			*NewOperator(')'),

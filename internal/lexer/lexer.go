@@ -59,7 +59,7 @@ func (l *Lexer) Peek() (*Token, int) {
 			}
 
 			if len(*word) > 1 {
-				l.token = NewFunction(*word)
+				l.token = NewKeyword(*word)
 			} else {
 				l.token = NewVariable(*word)
 			}

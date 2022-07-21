@@ -6,7 +6,7 @@ const (
 	Assignment TokenType = iota
 	Number
 	Variable
-	Function
+	Keyword
 	Add
 	Minus
 	Divide
@@ -31,8 +31,8 @@ func NewVariable(variable string) *Token {
 	return &Token{Variable, 0, variable}
 }
 
-func NewFunction(function string) *Token {
-	return &Token{Function, 0, function}
+func NewKeyword(function string) *Token {
+	return &Token{Keyword, 0, function}
 }
 
 func NewOperator(operator rune) *Token {
