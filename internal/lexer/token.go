@@ -34,3 +34,21 @@ func NewVariable(variable string) *Token {
 func NewFunction(function string) *Token {
 	return &Token{Variable, 0, function}
 }
+
+func NewOperator(operator rune) *Token {
+	tokenType := Add
+	switch operator {
+	case '+':
+		tokenType = Add
+	case '-':
+		tokenType = Minus
+	case '/':
+		tokenType = Divide
+	case '*':
+		tokenType = Multiply
+	case '^':
+		tokenType = Exponent
+	}
+
+	return &Token{tokenType, 0, string(operator)}
+}
