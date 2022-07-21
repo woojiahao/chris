@@ -7,16 +7,16 @@ import (
 
 type Expression string
 
-func (exp *Expression) Get(index int) *rune {
+func (exp Expression) Get(index int) *rune {
 	if index >= exp.Len() {
 		return nil
 	}
-	c := []rune(*exp)[index]
+	c := []rune(exp)[index]
 	return &c
 }
 
 // substring retrieves the substring from start to end (both inclusive)
-func (exp *Expression) substring(start, end int) *string {
+func (exp Expression) substring(start, end int) string {
 	if end >= exp.Len() {
 		end = exp.Len() - 1
 	}
@@ -25,13 +25,13 @@ func (exp *Expression) substring(start, end int) *string {
 		start = 0
 	}
 
-	substring := (*exp)[start : end+1]
+	substring := exp[start : end+1]
 	casted := string(substring)
 
-	return &casted
+	return casted
 }
 
-func (exp *Expression) readNumber(start int) (*float64, int) {
+func (exp Expression) readNumber(start int) (*float64, int) {
 	i := start
 	for {
 		cur := exp.Get(i)
@@ -51,7 +51,7 @@ func (exp *Expression) readNumber(start int) (*float64, int) {
 	}
 
 	// TODO: Add unit test for this
-	numStr := *exp.substring(start, i-1)
+	numStr := exp.substring(start, i-1)
 	num, err := strconv.ParseFloat(numStr, 64)
 	if err != nil {
 		return nil, -1
@@ -60,6 +60,6 @@ func (exp *Expression) readNumber(start int) (*float64, int) {
 	return &num, i
 }
 
-func (exp *Expression) Len() int {
-	return len(*exp)
+func (exp Expression) Len() int {
+	return len(exp)
 }
