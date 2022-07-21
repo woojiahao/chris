@@ -33,14 +33,10 @@ func (exp Expression) substring(start, end int) string {
 
 func (exp Expression) readNumber(start int) (*float64, int) {
 	i := start
-	for {
+	for i < exp.Len() {
 		cur := exp.Get(i)
-
-		if cur == nil && i < exp.Len() {
-			// If the cur is nil and we're not at the end yet, return
+		if cur == nil {
 			return nil, -1
-		} else if cur == nil && i >= exp.Len() {
-			break
 		}
 
 		if unicode.IsDigit(*cur) {
@@ -50,7 +46,6 @@ func (exp Expression) readNumber(start int) (*float64, int) {
 		}
 	}
 
-	// TODO: Add unit test for this
 	numStr := exp.substring(start, i-1)
 	num, err := strconv.ParseFloat(numStr, 64)
 	if err != nil {
