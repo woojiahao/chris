@@ -2,7 +2,10 @@ package lexer
 
 import (
 	"unicode"
+	"woojiahao.com/chris/internal/utils"
 )
+
+var operators = []rune{'+', '-', '/', '*', '^'}
 
 type Lexer struct {
 	expression Expression
@@ -36,6 +39,11 @@ func (l *Lexer) Peek() (*Token, int) {
 			num, next := l.expression.readNumber(i)
 			l.token = NewNumber(*num)
 			return l.token, next
+		}
+
+		if utils.In(operators, *cur) {
+			l.token = NewOperator(*cur)
+			return l.token, i + 1
 		}
 
 		l.token = NewVariable(string(*cur))
