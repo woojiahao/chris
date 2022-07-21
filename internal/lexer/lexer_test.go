@@ -80,6 +80,11 @@ func TestLexer_Next_Operators(t *testing.T) {
 			*NewOperator('-'),
 			*NewNumber(10),
 		}},
+		{"a = 10", []Token{
+			*NewVariable("a"),
+			*NewOperator('='),
+			*NewNumber(10),
+		}},
 	}
 
 	nextOnCases(cases, t)

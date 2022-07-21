@@ -5,7 +5,7 @@ import (
 	"woojiahao.com/chris/internal/utils"
 )
 
-var operators = []rune{'+', '-', '/', '*', '^'}
+var operators = []rune{'+', '-', '/', '*', '^', '='}
 
 type Lexer struct {
 	expression Expression
