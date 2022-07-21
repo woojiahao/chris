@@ -32,7 +32,7 @@ func NewVariable(variable string) *Token {
 }
 
 func NewFunction(function string) *Token {
-	return &Token{Variable, 0, function}
+	return &Token{Function, 0, function}
 }
 
 func NewOperator(operator rune) *Token {
