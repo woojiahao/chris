@@ -21,6 +21,11 @@ func TestLexer_Next(t *testing.T) {
 			{Number, 24, '2'},
 			{Number, 39, '3'},
 		}},
+		{"abc", []Token{
+			{Variable, 0, 'a'},
+			{Variable, 0, 'b'},
+			{Variable, 0, 'c'},
+		}},
 	}
 
 	for _, c := range cases {
