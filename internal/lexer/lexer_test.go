@@ -2,15 +2,35 @@ package lexer
 
 import "testing"
 
+type lexerCase struct {
+	expression     Expression
+	expectedTokens []Token
+}
+
 func TestLexer_Next(t *testing.T) {
-	l := New("24 39")
-	token := l.Next()
-	if token.Value != 24 {
-		t.Errorf("token.Value is %f, not 24", token.Value)
+	cases := []lexerCase{
+		{"24 39", []Token{
+			{Number, 24, '2'},
+			{Number, 39, '3'},
+		}},
+		{"  24   39", []Token{
+			{Number, 24, '2'},
+			{Number, 39, '3'},
+		}},
+		{"  24   39     ", []Token{
+			{Number, 24, '2'},
+			{Number, 39, '3'},
+		}},
 	}
 
-	token = l.Next()
-	if token.Value != 39 {
-		t.Errorf("token.Value is %f, not 39", token.Value)
+	for _, c := range cases {
+		l := New(c.expression)
+
+		for _, expected := range c.expectedTokens {
+			result := l.Next()
+			if result.Value != expected.Value {
+				t.Errorf("Expected %f, got %f instead", expected.Value, result.Value)
+			}
+		}
 	}
 }
