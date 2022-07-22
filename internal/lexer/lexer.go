@@ -6,7 +6,7 @@ import (
 )
 
 // TODO Use regex to check if the current character is an operator? Benchmark this
-var operators = []rune{'+', '-', '/', '*', '^', '=', '(', ')'}
+var operators = []rune{'+', '-', '/', '*', '^', '=', '(', ')', ','}
 
 type Lexer struct {
 	expression Expression
