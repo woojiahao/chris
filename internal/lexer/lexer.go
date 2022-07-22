@@ -1,8 +1,8 @@
 package lexer
 
 import (
+	"github.com/woojiahao/chris/internal/utils"
 	"unicode"
-	"woojiahao.com/chris/internal/utils"
 )
 
 // TODO Use regex to check if the current character is an operator? Benchmark this

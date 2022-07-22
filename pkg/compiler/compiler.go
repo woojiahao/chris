@@ -1,8 +1,8 @@
 package compiler
 
 import (
-	"woojiahao.com/chris/internal/lexer"
-	"woojiahao.com/chris/internal/parser"
+	"github.com/woojiahao/chris/internal/lexer"
+	"github.com/woojiahao/chris/internal/parser"
 )
 
 type Compiler struct {

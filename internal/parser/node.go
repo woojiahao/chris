@@ -2,8 +2,8 @@ package parser
 
 import (
 	"fmt"
+	"github.com/woojiahao/chris/internal/lexer"
 	"strings"
-	"woojiahao.com/chris/internal/lexer"
 )
 
 type Node interface {

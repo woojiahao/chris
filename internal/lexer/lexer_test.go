@@ -17,8 +17,10 @@ func nextOnCases(cases []lexerCase, t *testing.T) {
 				t.Errorf("Expected %f, got %f instead", result.Value, expected.Value)
 			}
 
-			if result.Text != expected.Text {
-				t.Errorf("Expected %s, got %s instead", result.Text, expected.Text)
+			if expected.Text != "" {
+				if result.Text != expected.Text {
+					t.Errorf("Expected %s, got %s instead", expected.Text, result.Text)
+				}
 			}
 		}
 	}
