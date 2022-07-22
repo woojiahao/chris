@@ -12,19 +12,19 @@ type PrefixParselet interface {
 type VariableParselet struct{}
 
 func (vp VariableParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	return VariableNode{token.Text}
+	return VariableNode(token.Text)
 }
 
 type KeywordParselet struct{}
 
 func (kp KeywordParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	return KeywordNode{token.Text}
+	return KeywordNode(token.Text)
 }
 
 type NumberParselet struct{}
 
 func (np NumberParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	return NumberNode{token.Value}
+	return NumberNode(token.Value)
 }
 
 // GroupParselet creates a sub-expression group using the prefix version of (
