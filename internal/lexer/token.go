@@ -3,22 +3,24 @@ package lexer
 import "fmt"
 
 type TokenType struct {
+	Name       string
 	Precedence int
+	Symbol     string
 }
 
 var (
-	Assignment       = TokenType{1}
-	Number           = TokenType{6}
-	Variable         = TokenType{6}
-	Keyword          = TokenType{8}
-	Minus            = TokenType{3}
-	Add              = TokenType{3}
-	Divide           = TokenType{4}
-	Multiply         = TokenType{4}
-	Exponent         = TokenType{6}
-	LeftParenthesis  = TokenType{0}
-	RightParenthesis = TokenType{0}
-	Comma            = TokenType{-1}
+	Assignment       = TokenType{"ASSIGNMENT", 1, "="}
+	Number           = TokenType{"NUMBER", -1, ""}
+	Variable         = TokenType{"VARIABLE", -1, ""}
+	Keyword          = TokenType{"KEYWORD", -1, ""}
+	Minus            = TokenType{"MINUS", 2, "-"}
+	Add              = TokenType{"ADD", 2, "+"}
+	Divide           = TokenType{"DIVIDE", 3, "/"}
+	Multiply         = TokenType{"MULTIPLY", 3, "*"}
+	Exponent         = TokenType{"EXPONENT", 4, "^"}
+	LeftParenthesis  = TokenType{"LEFT PARENTHESIS", 5, "("}
+	RightParenthesis = TokenType{"RIGHT PARENTHESIS", -1, ")"}
+	Comma            = TokenType{"COMMA", -1, ","}
 )
 
 type Token struct {
