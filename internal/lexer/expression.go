@@ -32,7 +32,15 @@ func (exp Expression) substring(start, end int) string {
 }
 
 func (exp Expression) readNumber(start int) (*float64, int) {
-	i := exp.read(start, unicode.IsDigit)
+	predicate := func(c rune) bool {
+		// TODO: Make it work for only the first '.'
+		if unicode.IsDigit(c) || c == '.' {
+			return true
+		}
+
+		return false
+	}
+	i := exp.read(start, predicate)
 	if i == -1 {
 		return nil, -1
 	}
