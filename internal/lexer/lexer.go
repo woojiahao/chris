@@ -14,8 +14,8 @@ type Lexer struct {
 	token      *Token
 }
 
-func New(exp Expression) *Lexer {
-	return &Lexer{exp, 0, nil}
+func New(exp string) *Lexer {
+	return &Lexer{Expression(exp), 0, nil}
 }
 
 // Peek reads the next non-whitespace token and returns the token and the index after reading the token
