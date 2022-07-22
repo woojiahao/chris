@@ -16,11 +16,12 @@ flowchart LR
 Lexer acts as an iterator over a given expression and converts each character/word into a given token. It ignores
 whitespaces and will parse numbers and words as a whole chunk.
 
-Parser reads the token stream from a given Lexer and applies grammar to the tokens to generate an AST tree
+Parser reads the token stream from a given Lexer and applies grammar to the tokens to generate an AST tree. It is not
+responsible for checking if the keywords are valid. It just needs to know that the expression can generate a valid
+AST tree.
 
 Compiler receives the generated AST tree from the Parser and performs operations on the given AST tree and the
-respective
-nodes.
+respective nodes.
 
 ### Parser
 
@@ -34,6 +35,7 @@ exp ::=
 ```
 
 ### Sample
+
 ```text
 1 + 2 * 3 := 1 + (2 * 3)
 sin(pi/4) := sin((pi/4))
