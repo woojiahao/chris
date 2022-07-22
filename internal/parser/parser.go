@@ -40,8 +40,8 @@ type Parser struct {
 	lexer *lexer.Lexer
 }
 
-func New(expression lexer.Expression) *Parser {
-	return &Parser{lexer.New(expression)}
+func New(lexer *lexer.Lexer) *Parser {
+	return &Parser{lexer}
 }
 
 func (p *Parser) ParseExpression(precedence int) Node {
