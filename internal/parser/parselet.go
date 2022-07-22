@@ -79,18 +79,21 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 
 	var args []Node
 
-	// Keep consuming and parsing the next token until we reach the ) token
-	// Split the arguments by a comma
+	// We check if the next token is ) and if it is, we consume and don't enter the loop
+	// If it is not ), we don't consume and instead, start parsing the arguments
 	if !parser.expectAndConsume(lexer.RightParenthesis) {
-		// The next token is not an immediate right parenthesis, we can start to parse the inputs
 		for {
+			// Parse the fist argument first before any checks
 			args = append(args, parser.ParseExpression(0))
 
+			// If the next token is not a comma, we don't parse it
+			// Exit from the loop and check for )
 			if !parser.expectAndConsume(lexer.Comma) {
 				break
 			}
 		}
 
+		// If it is ), consume, if not, don't consume
 		parser.expectAndConsume(lexer.RightParenthesis)
 	}
 
