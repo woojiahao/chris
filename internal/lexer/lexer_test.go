@@ -3,7 +3,7 @@ package lexer
 import "testing"
 
 type lexerCase struct {
-	expression     Expression
+	expression     string
 	expectedTokens []Token
 }
 
