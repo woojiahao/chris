@@ -39,23 +39,23 @@ sin(pi/4)               := sin((pi/4))
 2^x + cos(pi/4 + 15)    := (2^x) + cos(((pi/4) + 15))
 ```
 
-### Operators/Symbols
+## Operators/Symbols
 
-| Symbol     | Purpose                                                     | Position     | Precedence |
-|------------|-------------------------------------------------------------|--------------|------------|
-| +          | Addition                                                    | Infix        | 2          |
-| -          | Subtraction                                                 | Prefix/Infix | 2          |
-| *          | Multiplication                                              | Infix        | 3          |
-| /          | Division                                                    | Infix        | 3          |
-| ^          | Exponent                                                    | Infix        | 4          |
-| (          | Create sub-expression or encapsulate a function's arguments | Prefix       | 5          |
-| )          | End sub-expression                                          | -            | -1         |
-| =          | Assignment                                                  | Infix        | 1          |
-| <keyword>  | Keyword that corresponds to a function                      | Infix        | -1         |
-| <number>   | Number                                                      | Prefix       | -1         |
-| <Variable> | Single character to represent a variable                    | Prefix       | -1         |
+| Symbol      | Purpose                                                     | Position     | Precedence |
+|-------------|-------------------------------------------------------------|--------------|------------|
+| +           | Addition                                                    | Infix        | 2          |
+| -           | Subtraction                                                 | Prefix/Infix | 2          |
+| *           | Multiplication                                              | Infix        | 3          |
+| /           | Division                                                    | Infix        | 3          |
+| ^           | Exponent                                                    | Infix        | 4          |
+| (           | Create sub-expression or encapsulate a function's arguments | Prefix       | 5          |
+| )           | End sub-expression                                          | -            | -1         |
+| =           | Assignment                                                  | Infix        | 1          |
+| \<keyword>  | Keyword that corresponds to a function                      | Infix        | -1         |
+| \<number>   | Number                                                      | Prefix       | -1         |
+| \<Variable> | Single character to represent a variable                    | Prefix       | -1         |
 
-### Keywords
+## Keywords
 
 ```text
 sin, cos, tan, sec, csc, cot, pi
