@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"woojiahao.com/chris/internal/lexer"
+	"woojiahao.com/chris/internal/parser"
 )
 
 func main() {
-	l := lexer.New("12 34")
-	fmt.Printf("lexer.Next step 1 returns %v", l.Next())
-	fmt.Printf("lexer.Next step 2 returns %v", l.Next())
+	//p := parser.New("a = (1 + 2) * (4 - 3) / 7")
+	//fmt.Println(p.ParseExpression(0).Print())
+
+	p := parser.New("y = sin(x,  1 + 2 * 3 ^ (8+ 9))^2 + pi")
+	fmt.Println(p.ParseExpression(0).Print())
 }
