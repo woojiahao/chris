@@ -44,6 +44,10 @@ func New(lexer *lexer.Lexer) *Parser {
 	return &Parser{lexer}
 }
 
+func (p *Parser) Parse() Node {
+	return p.ParseExpression(0)
+}
+
 func (p *Parser) ParseExpression(precedence int) Node {
 	token := p.consume()
 
