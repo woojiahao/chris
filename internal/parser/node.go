@@ -7,15 +7,26 @@ import (
 )
 
 type Node interface {
+	// Print returns the textual representation of the Node
 	Print() string
 }
 
-type NumberNode struct {
-	Value float64
-}
+type NumberNode float64
 
 func (nn NumberNode) Print() string {
-	return fmt.Sprintf("%f", nn.Value)
+	return fmt.Sprintf("%f", nn)
+}
+
+type VariableNode string
+
+func (vn VariableNode) Print() string {
+	return fmt.Sprintf("%s", vn)
+}
+
+type KeywordNode string
+
+func (kn KeywordNode) Print() string {
+	return fmt.Sprintf("%s", kn)
 }
 
 type AssignmentNode struct {
@@ -25,14 +36,6 @@ type AssignmentNode struct {
 
 func (an AssignmentNode) Print() string {
 	return fmt.Sprintf("%s = %s", an.Variable.Print(), an.Right.Print())
-}
-
-type VariableNode struct {
-	Variable string
-}
-
-func (vn VariableNode) Print() string {
-	return fmt.Sprintf("%s", vn.Variable)
 }
 
 type OperatorNode struct {
@@ -65,14 +68,6 @@ func (fn FunctionNode) Print() string {
 		arguments = append(arguments, arg.Print())
 	}
 	return fmt.Sprintf("%s(%s)", fn.Keyword.Print(), strings.Join(arguments, ", "))
-}
-
-type KeywordNode struct {
-	Keyword string
-}
-
-func (kn KeywordNode) Print() string {
-	return fmt.Sprintf("%s", kn.Keyword)
 }
 
 type PrefixNode struct {
