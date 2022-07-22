@@ -2,7 +2,7 @@ package parser
 
 import (
 	"fmt"
-	"github.com/woojiahao/chris/internal/lexer"
+	"github.com/woojiahao/chris/pkg/lexer"
 	"strings"
 )
 

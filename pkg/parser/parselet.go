@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/woojiahao/chris/internal/lexer"
+	"github.com/woojiahao/chris/pkg/lexer"
 )
 
 // PrefixParselet is anything that has no left Node

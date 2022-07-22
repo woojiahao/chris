@@ -1,6 +1,8 @@
 package parser
 
-import "github.com/woojiahao/chris/internal/lexer"
+import (
+	"github.com/woojiahao/chris/pkg/lexer"
+)
 
 var prefixParselets = map[lexer.TokenType]PrefixParselet{
 	lexer.Variable:        VariableParselet{},
