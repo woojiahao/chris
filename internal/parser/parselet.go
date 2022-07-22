@@ -33,7 +33,7 @@ type GroupParselet struct{}
 func (gp GroupParselet) Parse(parser *Parser, token *lexer.Token) Node {
 	// As the GroupParselet needs to make the inner sub-expression more important, we start parsing with a precedence
 	// of 0
-	subExpression := parser.ParseExpression(0)
+	subExpression := parser.parseExpression(0)
 	if !parser.expect(lexer.RightParenthesis) {
 		// If the next token in the expression is not ), we can just panic
 		panic("Expected ), did not receive it at the end of the sub-expression")
@@ -45,7 +45,7 @@ func (gp GroupParselet) Parse(parser *Parser, token *lexer.Token) Node {
 type PrefixOperatorParselet struct{}
 
 func (pop PrefixOperatorParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	right := parser.ParseExpression(token.TokenType.Precedence)
+	right := parser.parseExpression(token.TokenType.Precedence)
 	return PrefixNode{token, right}
 }
 
@@ -65,7 +65,7 @@ func (bop BinaryOperatorParselet) Parse(parser *Parser, left Node, token *lexer.
 	if bop.isRight {
 		tick = 1
 	}
-	right := parser.ParseExpression(token.TokenType.Precedence - tick)
+	right := parser.parseExpression(token.TokenType.Precedence - tick)
 
 	return OperatorNode{left, right, token.TokenType}
 }
@@ -84,7 +84,7 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 	if !parser.expectAndConsume(lexer.RightParenthesis) {
 		for {
 			// Parse the fist argument first before any checks
-			args = append(args, parser.ParseExpression(0))
+			args = append(args, parser.parseExpression(0))
 
 			// If the next token is not a comma, we don't parse it
 			// Exit from the loop and check for )
@@ -105,7 +105,7 @@ type AssignmentParselet struct{}
 func (ap AssignmentParselet) Parse(parser *Parser, left Node, token *lexer.Token) Node {
 	variableNode, _ := left.(VariableNode)
 
-	right := parser.ParseExpression(lexer.Assignment.Precedence - 1)
+	right := parser.parseExpression(lexer.Assignment.Precedence - 1)
 	return AssignmentNode{variableNode, right}
 }
 

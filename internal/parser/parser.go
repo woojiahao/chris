@@ -45,10 +45,10 @@ func New(lexer *lexer.Lexer) *Parser {
 }
 
 func (p *Parser) Parse() Node {
-	return p.ParseExpression(0)
+	return p.parseExpression(0)
 }
 
-func (p *Parser) ParseExpression(precedence int) Node {
+func (p *Parser) parseExpression(precedence int) Node {
 	token := p.consume()
 
 	// Begin parsing the body to the right
