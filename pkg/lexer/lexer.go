@@ -2,26 +2,31 @@ package lexer
 
 import (
 	"github.com/woojiahao/chris/internal/utils"
+	"strings"
 )
 
 // TODO Use regex to check if the current character is an operator? Benchmark this
 var operators = []rune{'+', '-', '/', '*', '^', '=', '(', ')', ','}
 
-// TODO: Accept functions and constants and differentiate between the two
 type Lexer struct {
 	expression     Expression
 	nextExpression Expression
 	token          *Token
 	keywords       []string
+	constants      []string
 }
 
-func New(exp string, keywords []string) *Lexer {
+func New(exp string, keywords []string, constants []string) *Lexer {
 	expression := Expression(exp)
+
+	// TODO: Ensure that constants and keywords do not mix up
+
 	return &Lexer{
 		expression,
 		expression,
 		nil,
 		keywords,
+		constants,
 	}
 }
 
