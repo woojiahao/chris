@@ -111,6 +111,12 @@ func TestPrecedence(t *testing.T) {
 		// <keyword> == <variable>
 		assertParserCase("2 + pi + pi", OperatorNode{OperatorNode{NumberNode(2), KeywordNode("pi"), lexer.Add}, VariableNode("pi"), lexer.Add}),
 		assertParserCase("pi + pi + pi", OperatorNode{OperatorNode{KeywordNode("pi"), KeywordNode("pi"), lexer.Add}, VariableNode("pi"), lexer.Add}),
+
+		// <function call> > <operator> (since ^ is greatest among all ops, we can just use it as point of reference)
+		assertParserCase("2 ^ sin(1 + 2 * 3)", OperatorNode{NumberNode(2), FunctionNode{"sin", []Node{OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Multiply}, lexer.Add}}}, lexer.Exponent}),
+
+		// <group> > <operator>
+		assertParserCase("1 ^ (1 + 2)", OperatorNode{NumberNode(1), OperatorNode{NumberNode(1), NumberNode(2), lexer.Add}, lexer.Exponent}),
 	}
 	assertCases(t, cases)
 }
