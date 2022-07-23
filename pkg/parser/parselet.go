@@ -95,6 +95,11 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 		return nil, &ParseError{token.TokenType, invalidKeywordInFunctionCall}
 	}
 
+	// If the next argument is the end of the expression, indicate that the expression was incomplete
+	if parser.expect(lexer.EndOfExpression) {
+		return nil, &ParseError{token.TokenType, invalidEndOfFunction}
+	}
+
 	var args []Node
 
 	// We check if the next token is ) and if it is, we consume and don't enter the loop

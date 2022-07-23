@@ -70,7 +70,7 @@ func (l *Lexer) Peek() (*Token, int) {
 		return nil, -1
 	}
 
-	return nil, -1
+	return &Token{EndOfExpression, 0, ""}, -1
 }
 
 // Next returns token at the current position of index and moves the head to the next character for further calls
