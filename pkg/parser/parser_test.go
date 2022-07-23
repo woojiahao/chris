@@ -132,6 +132,25 @@ func TestLeftAssociativity(t *testing.T) {
 	assertCases(t, cases)
 }
 
+func TestGroups_Assert(t *testing.T) {
+	cases := []parserCase{
+		assertParserCase("1 ^ (2 + 3) * (4 * (a + b))", OperatorNode{
+			OperatorNode{
+				NumberNode(1),
+				OperatorNode{NumberNode(2), NumberNode(3), lexer.Add},
+				lexer.Exponent,
+			},
+			OperatorNode{
+				NumberNode(4),
+				OperatorNode{VariableNode("a"), VariableNode("b"), lexer.Add},
+				lexer.Multiply,
+			},
+			lexer.Multiply,
+		}),
+	}
+
+	assertCases(t, cases)
+}
 type parserCase struct {
 	expression     string
 	assert         Node
