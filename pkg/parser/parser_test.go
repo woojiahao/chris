@@ -13,7 +13,7 @@ func TestTerminalNodes(t *testing.T) {
 		assertParserCase("a", VariableNode("a")),
 		assertParserCase("sin", KeywordNode("sin")),
 	}
-	testParser(t, cases, true)
+	assertCases(t, cases)
 }
 
 func TestPrefixNode_Assert(t *testing.T) {
@@ -22,14 +22,14 @@ func TestPrefixNode_Assert(t *testing.T) {
 		assertParserCase("-a", PrefixNode{lexer.Minus, VariableNode("a")}),
 		assertParserCase("-sin", PrefixNode{lexer.Minus, KeywordNode("sin")}),
 	}
-	testParser(t, cases, true)
+	assertCases(t, cases)
 }
 
 func TestPrefixNode_Expect(t *testing.T) {
 	cases := []parserCase{
 		expectParserCase("^3", invalidPrefixToken),
 	}
-	testParser(t, cases, false)
+	expectCases(t, cases)
 }
 
 func TestOperatorNode_Assert(t *testing.T) {
@@ -40,7 +40,7 @@ func TestOperatorNode_Assert(t *testing.T) {
 		assertParserCase("3 / 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Divide}),
 		assertParserCase("3 ^ 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Exponent}),
 	}
-	testParser(t, cases, true)
+	assertCases(t, cases)
 }
 
 func TestFunctionNode_Assert(t *testing.T) {
@@ -52,7 +52,7 @@ func TestFunctionNode_Assert(t *testing.T) {
 		assertParserCase("sec(1, 2, 17)", FunctionNode{"sec", []Node{NumberNode(1), NumberNode(2), NumberNode(17)}}),
 		assertParserCase("cot(pi)", FunctionNode{"cot", []Node{KeywordNode("pi")}}),
 	}
-	testParser(t, cases, true)
+	assertCases(t, cases)
 }
 
 func TestFunctionNode_Expect(t *testing.T) {
@@ -60,7 +60,7 @@ func TestFunctionNode_Expect(t *testing.T) {
 		expectParserCase("sin(", invalidEndOfFunction),
 		expectParserCase("a(", invalidKeywordInFunctionCall),
 	}
-	testParser(t, cases, false)
+	expectCases(t, cases)
 }
 
 func TestAssignmentNode_Assert(t *testing.T) {
@@ -69,7 +69,7 @@ func TestAssignmentNode_Assert(t *testing.T) {
 		assertParserCase("a = b", AssignmentNode{"a", VariableNode("b")}),
 		assertParserCase("a = sin", AssignmentNode{"a", KeywordNode("sin")}),
 	}
-	testParser(t, cases, true)
+	assertCases(t, cases)
 }
 
 func TestAssignmentNode_Expect(t *testing.T) {
@@ -77,13 +77,21 @@ func TestAssignmentNode_Expect(t *testing.T) {
 		expectParserCase("sin = 2", invalidVariableInAssignment),
 		expectParserCase("a =", invalidEndOfAssignment),
 	}
-	testParser(t, cases, false)
+	expectCases(t, cases)
 }
 
 type parserCase struct {
 	expression     string
 	assert         Node
 	expectedReason errorReason
+}
+
+func assertCases(t *testing.T, cases []parserCase) {
+	testParser(t, cases, true)
+}
+
+func expectCases(t *testing.T, cases []parserCase) {
+	testParser(t, cases, false)
 }
 
 func assertParserCase(expression string, assert Node) parserCase {
