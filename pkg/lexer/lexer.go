@@ -8,10 +8,11 @@ import (
 // TODO Use regex to check if the current character is an operator? Benchmark this
 var operators = []rune{'+', '-', '/', '*', '^', '=', '(', ')', ','}
 
+// TODO: Accept functions and constants and differentiate between the two
 type Lexer struct {
-	expression Expression
-	index      int
-	token      *Token
+	expression     Expression
+	nextExpression Expression
+	token          *Token
 }
 
 func New(exp string) *Lexer {
