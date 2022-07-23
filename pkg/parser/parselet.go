@@ -143,6 +143,11 @@ func (ap AssignmentParselet) Parse(parser *Parser, left Node, token *lexer.Token
 		return nil, &ParseError{token.TokenType, invalidVariableInAssignment}
 	}
 
+	if parser.expect(lexer.EndOfExpression) {
+		// If we reach the end of the assignment already, that is an error
+		return nil, &ParseError{token.TokenType, invalidEndOfAssignment}
+	}
+
 	right, err := parser.parseExpression(lexer.Assignment.Precedence - 1)
 	if err != nil {
 		return nil, err

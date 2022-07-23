@@ -10,6 +10,7 @@ type errorReason string
 const (
 	invalidEndOfGroup            errorReason = "Expected ) at the end of a group, did not receive it"
 	invalidEndOfFunction                     = "Expected ) at the end of a function call, did not receive it"
+	invalidEndOfAssignment                   = "Expected right expression for assignment, did not receive it"
 	invalidKeywordInFunctionCall             = "Function call must use keyword that has more than 1 character"
 	invalidVariableInAssignment              = "Assignment variable must be a single-character value"
 	invalidPrefixToken                       = "Invalid prefix token. Only valid prefix tokens are [<variable><keyword><number>-(]"
