@@ -16,6 +16,14 @@ func TestTerminalNodes(t *testing.T) {
 	testParser(t, cases, true)
 }
 
+func TestPrefixNode_Assert(t *testing.T) {
+	cases := []parserCase{
+		{"-3", PrefixNode{lexer.Minus, NumberNode(3)}},
+		{"-a", PrefixNode{lexer.Minus, VariableNode("a")}},
+		{"-sin", PrefixNode{lexer.Minus, KeywordNode("sin")}},
+	}
+	testParser(t, cases, true)
+}
 type parserCase struct {
 	expression string
 	expected   Node
