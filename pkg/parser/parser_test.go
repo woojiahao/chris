@@ -9,50 +9,50 @@ import (
 
 func TestTerminalNodes(t *testing.T) {
 	cases := []parserCase{
-		{"3", NumberNode(3)},
-		{"a", VariableNode("a")},
-		{"sin", KeywordNode("sin")},
+		assertParserCase("3", NumberNode(3)),
+		assertParserCase("a", VariableNode("a")),
+		assertParserCase("sin", KeywordNode("sin")),
 	}
 	testParser(t, cases, true)
 }
 
 func TestPrefixNode_Assert(t *testing.T) {
 	cases := []parserCase{
-		{"-3", PrefixNode{lexer.Minus, NumberNode(3)}},
-		{"-a", PrefixNode{lexer.Minus, VariableNode("a")}},
-		{"-sin", PrefixNode{lexer.Minus, KeywordNode("sin")}},
+		assertParserCase("-3", PrefixNode{lexer.Minus, NumberNode(3)}),
+		assertParserCase("-a", PrefixNode{lexer.Minus, VariableNode("a")}),
+		assertParserCase("-sin", PrefixNode{lexer.Minus, KeywordNode("sin")}),
 	}
 	testParser(t, cases, true)
 }
 
 func TestOperatorNode_Assert(t *testing.T) {
 	cases := []parserCase{
-		{"3 + 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Add}},
-		{"3 - 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Minus}},
-		{"3 * 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Multiply}},
-		{"3 / 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Divide}},
-		{"3 ^ 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Exponent}},
+		assertParserCase("3 + 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Add}),
+		assertParserCase("3 - 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Minus}),
+		assertParserCase("3 * 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Multiply}),
+		assertParserCase("3 / 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Divide}),
+		assertParserCase("3 ^ 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Exponent}),
 	}
 	testParser(t, cases, true)
 }
 
 func TestFunctionNode_Assert(t *testing.T) {
 	cases := []parserCase{
-		{"sin()", FunctionNode{KeywordNode("sin"), []Node{}}},
-		{"cos(x)", FunctionNode{KeywordNode("cos"), []Node{VariableNode("x")}}},
-		{"tan(x, y, z)", FunctionNode{KeywordNode("tan"), []Node{VariableNode("x"), VariableNode("y"), VariableNode("z")}}},
-		{"csc(1)", FunctionNode{KeywordNode("csc"), []Node{NumberNode(1)}}},
-		{"sec(1, 2, 17)", FunctionNode{KeywordNode("sec"), []Node{NumberNode(1), NumberNode(2), NumberNode(17)}}},
-		{"cot(pi)", FunctionNode{KeywordNode("cot"), []Node{KeywordNode("pi")}}},
+		assertParserCase("sin()", FunctionNode{"sin", []Node{}}),
+		assertParserCase("cos(x)", FunctionNode{"cos", []Node{VariableNode("x")}}),
+		assertParserCase("tan(x, y, z)", FunctionNode{"tan", []Node{VariableNode("x"), VariableNode("y"), VariableNode("z")}}),
+		assertParserCase("csc(1)", FunctionNode{"csc", []Node{NumberNode(1)}}),
+		assertParserCase("sec(1, 2, 17)", FunctionNode{"sec", []Node{NumberNode(1), NumberNode(2), NumberNode(17)}}),
+		assertParserCase("cot(pi)", FunctionNode{"cot", []Node{KeywordNode("pi")}}),
 	}
 	testParser(t, cases, true)
 }
 
 func TestAssignmentNode_Assert(t *testing.T) {
 	cases := []parserCase{
-		{"a = 1", AssignmentNode{VariableNode("a"), NumberNode(1)}},
-		{"a = b", AssignmentNode{VariableNode("a"), VariableNode("b")}},
-		{"a = sin", AssignmentNode{VariableNode("a"), KeywordNode("sin")}},
+		assertParserCase("a = 1", AssignmentNode{"a", NumberNode(1)}),
+		assertParserCase("a = b", AssignmentNode{"a", VariableNode("b")}),
+		assertParserCase("a = sin", AssignmentNode{"a", KeywordNode("sin")}),
 	}
 	testParser(t, cases, true)
 }
