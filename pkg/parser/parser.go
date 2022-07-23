@@ -60,23 +60,33 @@ func New(lexer *lexer.Lexer) *Parser {
 	return &Parser{lexer}
 }
 
-func (p *Parser) Parse() Node {
+func (p *Parser) Parse() (Node, error) {
 	return p.parseExpression(0)
 }
 
-func (p *Parser) parseExpression(precedence int) Node {
+func (p *Parser) parseExpression(precedence int) (Node, error) {
 	token := p.consume()
 
 	// Begin parsing the body to the right
-	left := getPrefixParselet(token.TokenType).Parse(p, token)
+	prefixParselet, err := getPrefixParselet(token.TokenType)
+	if err != nil {
+		return nil, err
+	}
+
+	left := prefixParselet.Parse(p, token)
 
 	for precedence < p.nextPrecedence() {
 		token = p.consume()
 
-		left = getInfixParselet(token.TokenType).Parse(p, left, token)
+		infixParselet, err := getInfixParselet(token.TokenType)
+		if err != nil {
+			return nil, err
+		}
+
+		left = infixParselet.Parse(p, left, token)
 	}
 
-	return left
+	return left, nil
 }
 
 func (p *Parser) nextPrecedence() int {
