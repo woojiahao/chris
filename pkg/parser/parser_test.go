@@ -58,8 +58,17 @@ func TestAssignmentNode_Assert(t *testing.T) {
 }
 
 type parserCase struct {
-	expression string
-	expected   Node
+	expression     string
+	assert         Node
+	expectedReason errorReason
+}
+
+func assertParserCase(expression string, assert Node) parserCase {
+	return parserCase{expression, assert, ""}
+}
+
+func expectParserCase(expression string, expectedReason errorReason) parserCase {
+	return parserCase{expression, nil, expectedReason}
 }
 
 func setupParser(exp string) *Parser {
@@ -72,7 +81,9 @@ func testParser(t *testing.T, cases []parserCase, isAssert bool) {
 	for _, c := range cases {
 		p := setupParser(c.expression)
 		if isAssert {
-			assert(t, p, c.expected)
+			assert(t, p, c.assert)
+		} else {
+			expect(t, p, c.expectedReason)
 		}
 	}
 }
@@ -85,13 +96,13 @@ func assert(t *testing.T, p *Parser, expected Node) {
 	}
 }
 
-func expect(t *testing.T, p *Parser, expected ParseError) {
+func expect(t *testing.T, p *Parser, expectedReason errorReason) {
 	if result, err := p.Parse(); result != nil || err == nil {
 		t.Errorf("Expression should have produced a ParseError")
-	} else if parseError, ok := err.(ParseError); !ok {
+	} else if parseError, ok := err.(*ParseError); !ok {
 		t.Errorf("Expected ParseError, got %t instead", err)
-	} else if parseError.reason != expected.reason {
-		t.Errorf("Expected error '%s', got '%s' instead", expected.reason, parseError.reason)
+	} else if parseError.reason != expectedReason {
+		t.Errorf("Expected error '%s', got '%s' instead", expectedReason, parseError.reason)
 	}
 }
 
