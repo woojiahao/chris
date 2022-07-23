@@ -7,6 +7,14 @@ import (
 	"testing"
 )
 
+func TestTerminalNodes(t *testing.T) {
+	cases := []parserCase{
+		{"3", NumberNode(3)},
+		{"a", VariableNode("a")},
+		{"sin", KeywordNode("sin")},
+	}
+	testParser(t, cases, true)
+}
 
 type parserCase struct {
 	expression string
