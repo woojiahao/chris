@@ -25,6 +25,13 @@ func TestPrefixNode_Assert(t *testing.T) {
 	testParser(t, cases, true)
 }
 
+func TestPrefixNode_Expect(t *testing.T) {
+	cases := []parserCase{
+		expectParserCase("^3", invalidPrefixToken),
+	}
+	testParser(t, cases, false)
+}
+
 func TestOperatorNode_Assert(t *testing.T) {
 	cases := []parserCase{
 		assertParserCase("3 + 3", OperatorNode{NumberNode(3), NumberNode(3), lexer.Add}),
