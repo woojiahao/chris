@@ -208,18 +208,18 @@ func testParser(t *testing.T, cases []parserCase, isAssert bool) {
 	for _, c := range cases {
 		p := setupParser(c.expression)
 		if isAssert {
-			assert(t, p, c.assert)
+			assert(t, p, c.expression, c.assert)
 		} else {
 			expect(t, p, c.expectedReason)
 		}
 	}
 }
 
-func assert(t *testing.T, p *Parser, expected Node) {
+func assert(t *testing.T, p *Parser, exp string, expected Node) {
 	if result, err := p.Parse(); err != nil {
-		t.Errorf("Unexpected error encountered %v", err)
+		t.Errorf("Assert case (%s) :: Unexpected error encountered %v", exp, err)
 	} else if !equals(result, expected) {
-		t.Errorf("Expected %v (%t), got %v (%t) instead", result, result, expected, expected)
+		t.Errorf("Assert case (%s) :: Expected %v (%t), got %v (%t) instead", exp, expected, expected, result, result)
 	}
 }
 
