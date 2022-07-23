@@ -59,3 +59,39 @@ func (l *Lexer) Next() *Token {
 	l.nextExpression = Expression(next)
 	return token
 }
+
+func tokenizeKeyword(keyword string, constants []string, functions []string) []*Token {
+	cur := ""
+	var tokens []*Token
+
+	for i := 0; i < len(keyword); i++ {
+		cur += string(keyword[i])
+
+		if utils.In(constants, cur) {
+			// If the whole cur is a constant, return the constant
+			tokens = append(tokens, NewConstant(cur))
+			cur = ""
+			break
+		} else if utils.In(functions, cur) {
+			// If the whole cur is a function, return the function
+			tokens = append(tokens, NewKeyword(cur))
+			cur = ""
+			break
+		} else {
+			// Else, see if it's about to form a constant/function using fuzzy matching from the start
+			if utils.Any(constants, func(c string) bool { return utils.FuzzyMatch(c, cur) }) {
+				continue
+			} else if utils.Any(functions, func(c string) bool { return utils.FuzzyMatch(c, cur) }) {
+				continue
+			} else {
+				// If it's really forming nothing, convert everything thus far to a variable
+				for _, ch := range cur {
+					tokens = append(tokens, NewVariable(string(ch)))
+				}
+				cur = ""
+			}
+		}
+	}
+
+	return tokens
+}
