@@ -26,6 +26,48 @@ func nextOnCases(t *testing.T, cases []lexerCase) {
 	}
 }
 
+func TestLexer_Next_OperatorlessExpressions(t *testing.T) {
+	cases := []lexerCase{
+		{"3x", []Token{
+			*NewNumber(3),
+			*NewOperator('*'),
+			*NewVariable("x"),
+		}},
+		{"3sin(3x)", []Token{
+			*NewNumber(3),
+			*NewOperator('*'),
+			*NewKeyword("sin"),
+			*NewOperator('('),
+			*NewNumber(3),
+			*NewOperator('*'),
+			*NewVariable("x"),
+			*NewOperator(')'),
+		}},
+		{"x(1 + 2)", []Token{
+			*NewVariable("x"),
+			*NewOperator('*'),
+			*NewKeyword("sin"),
+			*NewOperator('('),
+			*NewNumber(1),
+			*NewOperator('+'),
+			*NewNumber(2),
+			*NewOperator(')'),
+		}},
+		{"xsin(1 + 2)", []Token{
+			*NewVariable("x"),
+			*NewOperator('*'),
+			*NewKeyword("sin"),
+			*NewOperator('('),
+			*NewNumber(1),
+			*NewOperator('+'),
+			*NewNumber(2),
+			*NewOperator(')'),
+		}},
+	}
+
+	nextOnCases(t, cases)
+}
+
 func TestLexer_Next_WithVariablesAndKeywords(t *testing.T) {
 	cases := []lexerCase{
 		{"abc", []Token{
