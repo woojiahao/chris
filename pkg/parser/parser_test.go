@@ -151,6 +151,18 @@ func TestGroups_Assert(t *testing.T) {
 
 	assertCases(t, cases)
 }
+
+func TestOperatorlessExpression_Assert(t *testing.T) {
+	// Operatorless expressions are those that are missing an operator between 2 differing sub-expressions
+	cases := []parserCase{
+		assertParserCase("3x", OperatorNode{NumberNode(3), VariableNode("x"), lexer.Multiply}),
+		assertParserCase("3pi", OperatorNode{NumberNode(3), KeywordNode("pi"), lexer.Multiply}),
+		assertParserCase("3sin(x)", OperatorNode{NumberNode(3), FunctionNode{"sin", []Node{VariableNode("x")}}, lexer.Multiply}),
+		assertParserCase("x(1 + 2 * 3)", OperatorNode{VariableNode("x"), OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Multiply}, lexer.Add}, lexer.Multiply}),
+		assertParserCase("3 -4", OperatorNode{NumberNode(3), NumberNode(4), lexer.Minus}),
+	}
+	assertCases(t, cases)
+}
 type parserCase struct {
 	expression     string
 	assert         Node
