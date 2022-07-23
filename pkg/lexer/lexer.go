@@ -87,12 +87,12 @@ func (l *Lexer) tokenizeKeyword(keyword string) []*Token {
 			// If the whole cur is a constant, return the constant
 			tokens = append(tokens, NewConstant(cur))
 			cur = ""
-			break
+			continue
 		} else if utils.In(l.keywords, cur) {
 			// If the whole cur is a function, return the function
 			tokens = append(tokens, NewKeyword(cur))
 			cur = ""
-			break
+			continue
 		} else {
 			// Else, see if it's about to form a constant/function using fuzzy matching from the start
 			if utils.Any(l.constants, func(c string) bool { return utils.FuzzyMatch(c, cur) }) {
