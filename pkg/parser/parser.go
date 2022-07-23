@@ -6,13 +6,16 @@ import (
 )
 
 type ParseError struct {
-	token  lexer.Token
-	index  int
-	reason string
+	tokenType lexer.TokenType
+	reason    string
 }
 
 func (pe *ParseError) Error() string {
-	return fmt.Sprintf("ParseError occurred at index %d on token %v with reason %s", pe.index, pe.token, pe.reason)
+	return fmt.Sprintf(
+		"ParseError occurred on TokenType %s with reason %s",
+		pe.tokenType.Name,
+		pe.reason,
+	)
 }
 
 var prefixParselets = map[lexer.TokenType]PrefixParselet{
@@ -33,19 +36,19 @@ var infixParselets = map[lexer.TokenType]InfixParselet{
 	lexer.Assignment:      AssignmentParselet{},
 }
 
-func getPrefixParselet(tokenType lexer.TokenType) PrefixParselet {
+func getPrefixParselet(tokenType lexer.TokenType) (PrefixParselet, error) {
 	if prefixParselet, ok := prefixParselets[tokenType]; !ok {
-		panic("Invalid prefix token")
+		return nil, &ParseError{tokenType, "Invalid prefix token. Only valid prefix tokens are [<variable><keyword><number>-(]"}
 	} else {
-		return prefixParselet
+		return prefixParselet, nil
 	}
 }
 
-func getInfixParselet(tokenType lexer.TokenType) InfixParselet {
+func getInfixParselet(tokenType lexer.TokenType) (InfixParselet, error) {
 	if infixParselet, ok := infixParselets[tokenType]; !ok {
-		panic("Invalid prefix token")
+		return nil, &ParseError{tokenType, "Invalid infix token. Only valid infix tokens are [+-/*^(=]"}
 	} else {
-		return infixParselet
+		return infixParselet, nil
 	}
 }
 
