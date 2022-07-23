@@ -62,6 +62,19 @@ func TestLexer_Next_OperatorlessExpressions(t *testing.T) {
 			*NewNumber(2),
 			*NewOperator(')'),
 		}},
+		{"pisin(pi(1 + 4))", []Token{
+			*NewConstant("pi"),
+			*NewOperator('*'),
+			*NewKeyword("sin"),
+			*NewOperator('('),
+			*NewConstant("pi"),
+			*NewOperator('*'),
+			*NewOperator('('),
+			*NewNumber(1),
+			*NewOperator('+'),
+			*NewNumber(4),
+			*NewOperator(')'),
+		}},
 	}
 
 	nextOnCases(t, cases)
