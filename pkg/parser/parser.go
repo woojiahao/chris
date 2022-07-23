@@ -86,7 +86,10 @@ func (p *Parser) parseExpression(precedence int) (Node, error) {
 			return nil, err
 		}
 
-		left = infixParselet.Parse(p, left, token)
+		left, err = infixParselet.Parse(p, left, token)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return left, nil

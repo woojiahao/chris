@@ -60,39 +60,50 @@ func (pop PrefixOperatorParselet) Parse(parser *Parser, token *lexer.Token) (Nod
 // InfixParselet is anything that has a left Node (may not have a right Node like the last character but it is still an
 // infix
 type InfixParselet interface {
-	Parse(parser *Parser, left Node, token *lexer.Token) Node
+	Parse(parser *Parser, left Node, token *lexer.Token) (Node, error)
 }
 
 type BinaryOperatorParselet struct {
 	isRight bool
 }
 
-func (bop BinaryOperatorParselet) Parse(parser *Parser, left Node, token *lexer.Token) Node {
+func (bop BinaryOperatorParselet) Parse(parser *Parser, left Node, token *lexer.Token) (Node, error) {
 	// TODO: Parse according to type of binary operator
 	tick := 0
 	if bop.isRight {
 		tick = 1
 	}
-	right := parser.parseExpression(token.TokenType.Precedence - tick)
+	right, err := parser.parseExpression(token.TokenType.Precedence - tick)
+	if err != nil {
+		return nil, err
+	}
 
-	return OperatorNode{left, right, token.TokenType}
+	return OperatorNode{left, right, token.TokenType}, nil
 }
 
 // FunctionCallParselet creates a function call that parses the arguments within (). It is the infix ( operator
 type FunctionCallParselet struct{}
 
-func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.Token) Node {
+func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.Token) (Node, error) {
 	// left is a KeywordNode while token is the ( infix operator
-	keywordNode, _ := left.(KeywordNode)
+	keywordNode, ok := left.(KeywordNode)
+	if !ok {
+		return nil, &ParseError{token.TokenType, "Function call must use keyword that has more than 1 character"}
+	}
 
 	var args []Node
 
 	// We check if the next token is ) and if it is, we consume and don't enter the loop
 	// If it is not ), we don't consume and instead, start parsing the arguments
+	// TODO: Enforce checks strictly
 	if !parser.expectAndConsume(lexer.RightParenthesis) {
 		for {
 			// Parse the fist argument first before any checks
-			args = append(args, parser.parseExpression(0))
+			arg, err := parser.parseExpression(0)
+			if err != nil {
+				return nil, err
+			}
+			args = append(args, arg)
 
 			// If the next token is not a comma, we don't parse it
 			// Exit from the loop and check for )
@@ -105,16 +116,22 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 		parser.expectAndConsume(lexer.RightParenthesis)
 	}
 
-	return FunctionNode{keywordNode, args}
+	return FunctionNode{keywordNode, args}, nil
 }
 
 type AssignmentParselet struct{}
 
-func (ap AssignmentParselet) Parse(parser *Parser, left Node, token *lexer.Token) Node {
-	variableNode, _ := left.(VariableNode)
+func (ap AssignmentParselet) Parse(parser *Parser, left Node, token *lexer.Token) (Node, error) {
+	variableNode, ok := left.(VariableNode)
+	if !ok {
+		return nil, &ParseError{token.TokenType, "Assignment variable must be a single-character value"}
+	}
 
-	right := parser.parseExpression(lexer.Assignment.Precedence - 1)
-	return AssignmentNode{variableNode, right}
+	right, err := parser.parseExpression(lexer.Assignment.Precedence - 1)
+	if err != nil {
+		return nil, err
+	}
+	return AssignmentNode{variableNode, right}, nil
 }
 
 type PostfixOperatorParselet struct{}
