@@ -48,6 +48,15 @@ func TestFunctionNode_Assert(t *testing.T) {
 	testParser(t, cases, true)
 }
 
+func TestAssignmentNode_Assert(t *testing.T) {
+	cases := []parserCase{
+		{"a = 1", AssignmentNode{VariableNode("a"), NumberNode(1)}},
+		{"a = b", AssignmentNode{VariableNode("a"), VariableNode("b")}},
+		{"a = sin", AssignmentNode{VariableNode("a"), KeywordNode("sin")}},
+	}
+	testParser(t, cases, true)
+}
+
 type parserCase struct {
 	expression string
 	expected   Node
