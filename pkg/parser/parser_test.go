@@ -82,6 +82,39 @@ func TestAssignmentNode_Expect(t *testing.T) {
 	expectCases(t, cases)
 }
 
+func TestPrecedence(t *testing.T) {
+	// Each test case builds on the previous test case's determination of precedence
+	// I.e. we start by establishing precedence of + and - are equal, then * and / are equal, then * and / are greater
+	// than + and -, and finally ^ is greater than all of them
+	cases := []parserCase{
+		// + == -
+		assertParserCase("1 + 2 + 3", OperatorNode{OperatorNode{NumberNode(1), NumberNode(2), lexer.Add}, NumberNode(3), lexer.Add}),
+		assertParserCase("1 - 2 + 3", OperatorNode{OperatorNode{NumberNode(1), NumberNode(2), lexer.Minus}, NumberNode(3), lexer.Add}),
+		assertParserCase("1 - 2 - 3", OperatorNode{OperatorNode{NumberNode(1), NumberNode(2), lexer.Minus}, NumberNode(3), lexer.Minus}),
+
+		// * == /
+		assertParserCase("1 * 2 * 3", OperatorNode{OperatorNode{NumberNode(1), NumberNode(2), lexer.Multiply}, NumberNode(3), lexer.Multiply}),
+		assertParserCase("1 / 2 * 3", OperatorNode{OperatorNode{NumberNode(1), NumberNode(2), lexer.Divide}, NumberNode(3), lexer.Multiply}),
+		assertParserCase("1 / 2 / 3", OperatorNode{OperatorNode{NumberNode(1), NumberNode(2), lexer.Divide}, NumberNode(3), lexer.Divide}),
+
+		// */ > +-
+		assertParserCase("1 + 2 * 3", OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Multiply}, lexer.Add}),
+		assertParserCase("1 + 2 / 3", OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Divide}, lexer.Add}),
+
+		// ^ > */ > +-
+		assertParserCase("1 * 2 ^ 3", OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Exponent}, lexer.Multiply}),
+
+		// <variable> == <number>
+		assertParserCase("2 + a + b", OperatorNode{OperatorNode{NumberNode(2), VariableNode("a"), lexer.Add}, VariableNode("b"), lexer.Add}),
+		assertParserCase("a + a + b", OperatorNode{OperatorNode{VariableNode("a"), VariableNode("a"), lexer.Add}, VariableNode("b"), lexer.Add}),
+
+		// <keyword> == <variable>
+		assertParserCase("2 + pi + pi", OperatorNode{OperatorNode{NumberNode(2), KeywordNode("pi"), lexer.Add}, VariableNode("pi"), lexer.Add}),
+		assertParserCase("pi + pi + pi", OperatorNode{OperatorNode{KeywordNode("pi"), KeywordNode("pi"), lexer.Add}, VariableNode("pi"), lexer.Add}),
+	}
+	assertCases(t, cases)
+}
+
 type parserCase struct {
 	expression     string
 	assert         Node
