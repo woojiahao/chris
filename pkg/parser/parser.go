@@ -73,7 +73,10 @@ func (p *Parser) parseExpression(precedence int) (Node, error) {
 		return nil, err
 	}
 
-	left := prefixParselet.Parse(p, token)
+	left, err := prefixParselet.Parse(p, token)
+	if err != nil {
+		return nil, err
+	}
 
 	for precedence < p.nextPrecedence() {
 		token = p.consume()

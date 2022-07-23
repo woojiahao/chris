@@ -6,47 +6,55 @@ import (
 
 // PrefixParselet is anything that has no left Node
 type PrefixParselet interface {
-	Parse(parser *Parser, token *lexer.Token) Node
+	Parse(parser *Parser, token *lexer.Token) (Node, error)
 }
 
 type VariableParselet struct{}
 
-func (vp VariableParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	return VariableNode(token.Text)
+func (vp VariableParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) {
+	return VariableNode(token.Text), nil
 }
 
 type KeywordParselet struct{}
 
-func (kp KeywordParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	return KeywordNode(token.Text)
+func (kp KeywordParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) {
+	return KeywordNode(token.Text), nil
 }
 
 type NumberParselet struct{}
 
-func (np NumberParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	return NumberNode(token.Value)
+func (np NumberParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) {
+	return NumberNode(token.Value), nil
 }
 
 // GroupParselet creates a sub-expression group using the prefix version of (
 type GroupParselet struct{}
 
-func (gp GroupParselet) Parse(parser *Parser, token *lexer.Token) Node {
+func (gp GroupParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) {
 	// As the GroupParselet needs to make the inner sub-expression more important, we start parsing with a precedence
 	// of 0
-	subExpression := parser.parseExpression(0)
+	subExpression, err := parser.parseExpression(0)
+	if err != nil {
+		return nil, err
+	}
+
 	if !parser.expect(lexer.RightParenthesis) {
 		// If the next token in the expression is not ), we can just panic
-		panic("Expected ), did not receive it at the end of the sub-expression")
+		return nil, &ParseError{token.TokenType, "Expected ), did not receive it at the end of the sub-expression"}
 	}
+
 	parser.consume()
-	return subExpression
+	return subExpression, nil
 }
 
 type PrefixOperatorParselet struct{}
 
-func (pop PrefixOperatorParselet) Parse(parser *Parser, token *lexer.Token) Node {
-	right := parser.parseExpression(token.TokenType.Precedence)
-	return PrefixNode{token.TokenType, right}
+func (pop PrefixOperatorParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) {
+	right, err := parser.parseExpression(token.TokenType.Precedence)
+	if err != nil {
+		return nil, err
+	}
+	return PrefixNode{token.TokenType, right}, nil
 }
 
 // InfixParselet is anything that has a left Node (may not have a right Node like the last character but it is still an
