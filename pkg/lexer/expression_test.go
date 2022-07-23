@@ -16,6 +16,7 @@ func TestExpression_readNumber(t *testing.T) {
 		{"5", 0, 5, 1},
 		{"123 ", 0, 123, 3},
 		{" 123,", 1, 123, 4},
+		{"10.11", 0, 10.11, 5},
 	}
 
 	for _, c := range cases {

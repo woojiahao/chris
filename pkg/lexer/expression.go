@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"strconv"
+	"github.com/woojiahao/chris/internal/utils"
 	"unicode"
 )
 
@@ -32,26 +32,29 @@ func (exp Expression) substring(start, end int) string {
 }
 
 func (exp Expression) readNumber(start int) (*float64, int) {
-	predicate := func(c rune) bool {
-		// TODO: Make it work for only the first '.'
-		if unicode.IsDigit(c) || c == '.' {
-			return true
+	i, decimalRead := start, false
+	for i < exp.Len() {
+		if cur := exp.Get(i); cur == nil {
+			return nil, -1
+		} else if unicode.IsDigit(*cur) {
+			i++
+		} else if *cur == '.' {
+			if decimalRead {
+				return nil, -1
+			} else {
+				decimalRead = true
+				i++
+			}
+		} else {
+			break
 		}
-
-		return false
 	}
-	i := exp.read(start, predicate)
-	if i == -1 {
+
+	if num := utils.StrToFloat(exp.substring(start, i-1)); num == nil {
 		return nil, -1
+	} else {
+		return num, i
 	}
-
-	numStr := exp.substring(start, i-1)
-	num, err := strconv.ParseFloat(numStr, 64)
-	if err != nil {
-		return nil, -1
-	}
-
-	return &num, i
 }
 
 func (exp Expression) readWord(start int) (*string, int) {
