@@ -14,6 +14,7 @@ const (
 	invalidVariableInAssignment              = "Assignment variable must be a single-character value"
 	invalidPrefixToken                       = "Invalid prefix token. Only valid prefix tokens are [<variable><keyword><number>-(]"
 	invalidInfixToken                        = "Invalid infix token. Only valid infix tokens are [+-/*^(=]"
+	endOfExpression                          = "Failed to parse expression as it has reached the end of the expression"
 )
 
 type ParseError struct {
