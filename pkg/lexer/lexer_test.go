@@ -70,7 +70,11 @@ func TestLexer_Next_OperatorlessExpressions(t *testing.T) {
 func TestLexer_Next_WithVariablesAndKeywords(t *testing.T) {
 	cases := []lexerCase{
 		{"abc", []Token{
-			*NewKeyword("abc"),
+			*NewVariable("a"),
+			*NewVariable("*"),
+			*NewVariable("b"),
+			*NewVariable("*"),
+			*NewVariable("c"),
 		}},
 		{"a = sin(15)", []Token{
 			*NewVariable("a"),
@@ -78,6 +82,12 @@ func TestLexer_Next_WithVariablesAndKeywords(t *testing.T) {
 			*NewKeyword("sin"),
 			*NewOperator('('),
 			*NewNumber(15),
+			*NewOperator(')'),
+		}},
+		{"sin(pi)", []Token{
+			*NewKeyword("sin"),
+			*NewOperator('('),
+			*NewConstant("pi"),
 			*NewOperator(')'),
 		}},
 	}
