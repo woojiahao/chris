@@ -19,7 +19,7 @@ type ParseError struct {
 	reason    errorReason
 }
 
-func (pe *ParseError) Error() string {
+func (pe ParseError) Error() string {
 	return fmt.Sprintf(
 		"ParseError occurred on TokenType %s with reason %s",
 		pe.tokenType.Name,
