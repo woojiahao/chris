@@ -78,14 +78,21 @@ func testParser(t *testing.T, cases []parserCase, isAssert bool) {
 }
 
 func assert(t *testing.T, p *Parser, expected Node) {
-	if result := p.Parse(); !equals(result, expected) {
+	if result, err := p.Parse(); err != nil {
+		t.Errorf("Unexpected error encountered %v", err)
+	} else if !equals(result, expected) {
 		t.Errorf("Expected %v (%t), got %v (%t) instead", result, result, expected, expected)
 	}
 }
 
-// TODO: Add errors to main code to test for error strings
-func expect(t *testing.T, p *Parser, error string) {
-
+func expect(t *testing.T, p *Parser, expected ParseError) {
+	if result, err := p.Parse(); result != nil || err == nil {
+		t.Errorf("Expression should have produced a ParseError")
+	} else if parseError, ok := err.(ParseError); !ok {
+		t.Errorf("Expected ParseError, got %t instead", err)
+	} else if parseError.reason != expected.reason {
+		t.Errorf("Expected error '%s', got '%s' instead", expected.reason, parseError.reason)
+	}
 }
 
 func equals(n1, n2 Node) bool {
