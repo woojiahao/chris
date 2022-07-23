@@ -69,6 +69,8 @@ func TestAssignmentNode_Assert(t *testing.T) {
 		assertParserCase("a = 1", AssignmentNode{"a", NumberNode(1)}),
 		assertParserCase("a = b", AssignmentNode{"a", VariableNode("b")}),
 		assertParserCase("a = sin", AssignmentNode{"a", KeywordNode("sin")}),
+		assertParserCase("a = sin(1 + 2)", AssignmentNode{"a", FunctionNode{"sin", []Node{OperatorNode{NumberNode(1), NumberNode(2), lexer.Add}}}}),
+		assertParserCase("a = 1 * 3", AssignmentNode{"a", OperatorNode{NumberNode(1), NumberNode(3), lexer.Multiply}}),
 	}
 	assertCases(t, cases)
 }
