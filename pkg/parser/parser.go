@@ -7,9 +7,10 @@ import (
 var prefixParselets = map[lexer.TokenType]PrefixParselet{
 	lexer.Variable:        VariableParselet{},
 	lexer.Number:          NumberParselet{},
+	lexer.Keyword:         KeywordParselet{},
+	lexer.Constant:        ConstantParselet{},
 	lexer.Minus:           PrefixOperatorParselet{},
 	lexer.LeftParenthesis: GroupParselet{},
-	lexer.Keyword:         KeywordParselet{},
 }
 
 var infixParselets = map[lexer.TokenType]InfixParselet{

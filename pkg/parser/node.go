@@ -29,6 +29,13 @@ func (kn KeywordNode) Print() string {
 	return fmt.Sprintf("%s", kn)
 }
 
+// TODO: Load the alternate value?
+type ConstantNode string
+
+func (cn ConstantNode) Print() string {
+	return fmt.Sprintf("%s", cn)
+}
+
 type AssignmentNode struct {
 	Variable VariableNode
 	Right    Node

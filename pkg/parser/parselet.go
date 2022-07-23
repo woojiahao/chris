@@ -21,6 +21,12 @@ func (kp KeywordParselet) Parse(parser *Parser, token *lexer.Token) (Node, error
 	return KeywordNode(token.Text), nil
 }
 
+type ConstantParselet struct{}
+
+func (cp ConstantParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) {
+	return ConstantNode(token.Text), nil
+}
+
 type NumberParselet struct{}
 
 func (np NumberParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) {
