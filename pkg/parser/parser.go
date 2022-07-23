@@ -1,8 +1,19 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/woojiahao/chris/pkg/lexer"
 )
+
+type ParseError struct {
+	token  lexer.Token
+	index  int
+	reason string
+}
+
+func (pe *ParseError) Error() string {
+	return fmt.Sprintf("ParseError occurred at index %d on token %v with reason %s", pe.index, pe.token, pe.reason)
+}
 
 var prefixParselets = map[lexer.TokenType]PrefixParselet{
 	lexer.Variable:        VariableParselet{},
