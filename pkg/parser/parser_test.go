@@ -10,6 +10,7 @@ import (
 func TestTerminalNodes(t *testing.T) {
 	cases := []parserCase{
 		assertParserCase("3", NumberNode(3)),
+		assertParserCase("17.6", NumberNode(17.6)),
 		assertParserCase("a", VariableNode("a")),
 		assertParserCase("sin", KeywordNode("sin")),
 	}
