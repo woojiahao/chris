@@ -51,7 +51,10 @@ func (p *Parser) Parse() (Node, error) {
 }
 
 func (p *Parser) parseExpression(precedence int) (Node, error) {
-	token := p.consume()
+	token, err := p.consume()
+	if err != nil {
+		return nil, err
+	}
 
 	// Begin parsing the body to the right
 	prefixParselet, err := getPrefixParselet(token.TokenType)
@@ -65,7 +68,10 @@ func (p *Parser) parseExpression(precedence int) (Node, error) {
 	}
 
 	for precedence < p.nextPrecedence() {
-		token = p.consume()
+		token, err = p.consume()
+		if err != nil {
+			return nil, err
+		}
 
 		infixParselet, err := getInfixParselet(token.TokenType)
 		if err != nil {
@@ -92,13 +98,13 @@ func (p *Parser) nextPrecedence() int {
 	return nextToken.TokenType.Precedence
 }
 
-func (p *Parser) consume() *lexer.Token {
+func (p *Parser) consume() (*lexer.Token, error) {
 	token := p.lexer.Next()
 	if token == nil {
-		panic("Unable to parse expression")
+		return nil, &ParseError{lexer.EndOfExpression, endOfExpression}
 	}
 
-	return token
+	return token, nil
 }
 
 // expect checks the next token inline and returns whether it is the same as the target token type
