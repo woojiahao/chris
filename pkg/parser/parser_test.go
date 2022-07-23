@@ -115,6 +115,16 @@ func TestPrecedence(t *testing.T) {
 	assertCases(t, cases)
 }
 
+func TestAssociativity(t *testing.T) {
+	cases := []parserCase{
+		assertParserCase("a = b = c", AssignmentNode{"a", AssignmentNode{"b", VariableNode("c")}}),
+		assertParserCase("a = b = c = d", AssignmentNode{"a", AssignmentNode{"b", AssignmentNode{"c", VariableNode("d")}}}),
+		assertParserCase("a ^ b ^ c", OperatorNode{VariableNode("a"), OperatorNode{VariableNode("b"), VariableNode("c"), lexer.Exponent}, lexer.Exponent}),
+		assertParserCase("a ^ b ^ c ^ d", OperatorNode{VariableNode("a"), OperatorNode{VariableNode("b"), OperatorNode{VariableNode("c"), VariableNode("d"), lexer.Exponent}, lexer.Exponent}, lexer.Exponent}),
+	}
+	assertCases(t, cases)
+}
+
 type parserCase struct {
 	expression     string
 	assert         Node
