@@ -43,7 +43,11 @@ func (gp GroupParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) 
 		return nil, &ParseError{token.TokenType, invalidEndOfGroup}
 	}
 
-	parser.consume()
+	_, err = parser.consume()
+	if err != nil {
+		return nil, err
+	}
+
 	return subExpression, nil
 }
 
