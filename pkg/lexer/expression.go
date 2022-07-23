@@ -133,11 +133,7 @@ func (exp Expression) lookAhead(start int) (*Token, int) {
 				return nil, -1
 			}
 
-			if len(*word) > 1 {
-				token = NewKeyword(*word)
-			} else {
-				token = NewVariable(*word)
-			}
+			token = NewKeyword(*word)
 			i = next
 			break
 		}
