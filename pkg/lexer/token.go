@@ -9,19 +9,20 @@ type TokenType struct {
 }
 
 var (
-	Assignment       = TokenType{"ASSIGNMENT", 1, "="}
 	Number           = TokenType{"NUMBER", -1, ""}
 	Variable         = TokenType{"VARIABLE", -1, ""}
 	Keyword          = TokenType{"KEYWORD", -1, ""}
+	Constant         = TokenType{"CONSTANT", -1, ""}
+	RightParenthesis = TokenType{"RIGHT PARENTHESIS", -1, ")"}
+	Comma            = TokenType{"COMMA", -1, ","}
+	EndOfExpression  = TokenType{"END OF EXPRESSION", -9999, ""}
+	Assignment       = TokenType{"ASSIGNMENT", 1, "="}
 	Minus            = TokenType{"MINUS", 2, "-"}
 	Add              = TokenType{"ADD", 2, "+"}
 	Divide           = TokenType{"DIVIDE", 3, "/"}
 	Multiply         = TokenType{"MULTIPLY", 3, "*"}
 	Exponent         = TokenType{"EXPONENT", 4, "^"}
 	LeftParenthesis  = TokenType{"LEFT PARENTHESIS", 5, "("}
-	RightParenthesis = TokenType{"RIGHT PARENTHESIS", -1, ")"}
-	Comma            = TokenType{"COMMA", -1, ","}
-	EndOfExpression  = TokenType{"END OF EXPRESSION", -9999, ""}
 )
 
 type Token struct {
@@ -34,13 +35,16 @@ func NewNumber(value float64) *Token {
 	return &Token{Number, value, fmt.Sprintf("%f", value)}
 }
 
-// TODO: Allow variables and functions to exist in the same name pool instead of having variables just be a single char
 func NewVariable(variable string) *Token {
 	return &Token{Variable, 0, variable}
 }
 
 func NewKeyword(function string) *Token {
 	return &Token{Keyword, 0, function}
+}
+
+func NewConstant(constant string) *Token {
+	return &Token{Constant, 0, constant}
 }
 
 func NewOperator(operator rune) *Token {
