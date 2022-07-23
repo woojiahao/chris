@@ -34,10 +34,27 @@ func New(exp string, keywords []string, constants []string) *Lexer {
 func (l *Lexer) Peek() (*Token, string) {
 	// Get the very first token in the nextExpression
 	token, j := l.nextExpression.lookAhead(0)
-	// Get the very next token in the nextExpression
-	next, _ := l.nextExpression.lookAhead(j)
 
 	nextExpression := l.nextExpression.substring(j, l.nextExpression.Len()-1)
+
+	// Parse the current token if it's a keyword since it can tokenizeKeyword into variable, constant, or function (keyword) still
+	// TODO: Explore splitting in the actual look ahead
+	if token.TokenType == Keyword {
+		splitTokens := l.tokenizeKeyword(token.Text)
+		if len(splitTokens) > 1 {
+			splitTokensText := utils.Map(splitTokens, func(t *Token) string {
+				return t.Text
+			})
+			nextExpression = "*" + strings.Join(splitTokensText[1:], "*") + nextExpression
+			return splitTokens[0], nextExpression
+		} else {
+			// Use the appropriately cast version of token, not the Keyword
+			token = splitTokens[0]
+		}
+	}
+
+	// Get the very next token in the nextExpression
+	next, _ := l.nextExpression.lookAhead(j)
 
 	acceptedPairs := map[TokenType][]TokenType{
 		//Keyword: LeftParenthesis, // pi( (not supported yet until word parsing works properly)
