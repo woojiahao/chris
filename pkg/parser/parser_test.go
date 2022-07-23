@@ -36,6 +36,18 @@ func TestOperatorNode_Assert(t *testing.T) {
 	testParser(t, cases, true)
 }
 
+func TestFunctionNode_Assert(t *testing.T) {
+	cases := []parserCase{
+		{"sin()", FunctionNode{KeywordNode("sin"), []Node{}}},
+		{"cos(x)", FunctionNode{KeywordNode("cos"), []Node{VariableNode("x")}}},
+		{"tan(x, y, z)", FunctionNode{KeywordNode("tan"), []Node{VariableNode("x"), VariableNode("y"), VariableNode("z")}}},
+		{"csc(1)", FunctionNode{KeywordNode("csc"), []Node{NumberNode(1)}}},
+		{"sec(1, 2, 17)", FunctionNode{KeywordNode("sec"), []Node{NumberNode(1), NumberNode(2), NumberNode(17)}}},
+		{"cot(pi)", FunctionNode{KeywordNode("cot"), []Node{KeywordNode("pi")}}},
+	}
+	testParser(t, cases, true)
+}
+
 type parserCase struct {
 	expression string
 	expected   Node
