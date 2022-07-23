@@ -75,6 +75,7 @@ func TestAssignmentNode_Assert(t *testing.T) {
 func TestAssignmentNode_Expect(t *testing.T) {
 	cases := []parserCase{
 		expectParserCase("sin = 2", invalidVariableInAssignment),
+		expectParserCase("3 = 2", invalidVariableInAssignment),
 		expectParserCase("a =", invalidEndOfAssignment),
 	}
 	expectCases(t, cases)
