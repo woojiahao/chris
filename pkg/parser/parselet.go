@@ -46,7 +46,7 @@ type PrefixOperatorParselet struct{}
 
 func (pop PrefixOperatorParselet) Parse(parser *Parser, token *lexer.Token) Node {
 	right := parser.parseExpression(token.TokenType.Precedence)
-	return PrefixNode{token, right}
+	return PrefixNode{token.TokenType, right}
 }
 
 // InfixParselet is anything that has a left Node (may not have a right Node like the last character but it is still an

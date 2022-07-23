@@ -71,10 +71,10 @@ func (fn FunctionNode) Print() string {
 }
 
 type PrefixNode struct {
-	PrefixToken *lexer.Token
+	PrefixToken lexer.TokenType
 	Right       Node
 }
 
 func (pn PrefixNode) Print() string {
-	return fmt.Sprintf("%s%s", pn.PrefixToken.Text, pn.Right.Print())
+	return fmt.Sprintf("%s%s", pn.PrefixToken.Symbol, pn.Right.Print())
 }
