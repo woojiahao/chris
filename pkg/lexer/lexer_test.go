@@ -7,7 +7,7 @@ type lexerCase struct {
 	expectedTokens []Token
 }
 
-func nextOnCases(cases []lexerCase, t *testing.T) {
+func nextOnCases(t *testing.T, cases []lexerCase) {
 	for _, c := range cases {
 		l := New(c.expression)
 
@@ -41,7 +41,7 @@ func TestLexer_Next_WithVariablesAndKeywords(t *testing.T) {
 		}},
 	}
 
-	nextOnCases(cases, t)
+	nextOnCases(t, cases)
 }
 
 func TestLexer_Next_NumbersOnly(t *testing.T) {
@@ -60,7 +60,7 @@ func TestLexer_Next_NumbersOnly(t *testing.T) {
 		}},
 	}
 
-	nextOnCases(cases, t)
+	nextOnCases(t, cases)
 }
 
 func TestLexer_Next_Operators(t *testing.T) {
@@ -111,5 +111,5 @@ func TestLexer_Next_Operators(t *testing.T) {
 		}},
 	}
 
-	nextOnCases(cases, t)
+	nextOnCases(t, cases)
 }
