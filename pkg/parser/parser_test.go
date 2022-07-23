@@ -55,6 +55,14 @@ func TestFunctionNode_Assert(t *testing.T) {
 	testParser(t, cases, true)
 }
 
+func TestFunctionNode_Expect(t *testing.T) {
+	cases := []parserCase{
+		expectParserCase("sin(", invalidEndOfFunction),
+		expectParserCase("a(", invalidKeywordInFunctionCall),
+	}
+	testParser(t, cases, false)
+}
+
 func TestAssignmentNode_Assert(t *testing.T) {
 	cases := []parserCase{
 		assertParserCase("a = 1", AssignmentNode{"a", NumberNode(1)}),
