@@ -5,9 +5,18 @@ import (
 	"github.com/woojiahao/chris/pkg/lexer"
 )
 
+type errorReason string
+
+const (
+	invalidEndOfGroup            errorReason = "Expected ) at the end of a group, did not receive it"
+	invalidEndOfFunction                     = "Expected ) at the end of a function call, did not receive it"
+	invalidKeywordInFunctionCall             = "Function call must use keyword that has more than 1 character"
+	invalidVariableInAssignment              = "Assignment variable must be a single-character value"
+)
+
 type ParseError struct {
 	tokenType lexer.TokenType
-	reason    string
+	reason    errorReason
 }
 
 func (pe *ParseError) Error() string {

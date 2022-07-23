@@ -40,7 +40,7 @@ func (gp GroupParselet) Parse(parser *Parser, token *lexer.Token) (Node, error) 
 
 	if !parser.expect(lexer.RightParenthesis) {
 		// If the next token in the expression is not ), we can just panic
-		return nil, &ParseError{token.TokenType, "Expected ), did not receive it at the end of the sub-expression"}
+		return nil, &ParseError{token.TokenType, invalidEndOfGroup}
 	}
 
 	parser.consume()
@@ -88,7 +88,7 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 	// left is a KeywordNode while token is the ( infix operator
 	keywordNode, ok := left.(KeywordNode)
 	if !ok {
-		return nil, &ParseError{token.TokenType, "Function call must use keyword that has more than 1 character"}
+		return nil, &ParseError{token.TokenType, invalidKeywordInFunctionCall}
 	}
 
 	var args []Node
@@ -114,7 +114,7 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 
 		// If it's not a ), return an error
 		if !parser.expect(lexer.RightParenthesis) {
-			return nil, &ParseError{token.TokenType, "Function call incomplete without ) to end of the arguments"}
+			return nil, &ParseError{token.TokenType, invalidEndOfFunction}
 		}
 		// Guaranteed to consume a ) token
 		parser.consume()
@@ -128,7 +128,7 @@ type AssignmentParselet struct{}
 func (ap AssignmentParselet) Parse(parser *Parser, left Node, token *lexer.Token) (Node, error) {
 	variableNode, ok := left.(VariableNode)
 	if !ok {
-		return nil, &ParseError{token.TokenType, "Assignment variable must be a single-character value"}
+		return nil, &ParseError{token.TokenType, invalidVariableInAssignment}
 	}
 
 	right, err := parser.parseExpression(lexer.Assignment.Precedence - 1)
