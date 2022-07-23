@@ -24,7 +24,7 @@ var infixParselets = map[lexer.TokenType]InfixParselet{
 
 func getPrefixParselet(tokenType lexer.TokenType) (PrefixParselet, error) {
 	if prefixParselet, ok := prefixParselets[tokenType]; !ok {
-		return nil, &ParseError{tokenType, "Invalid prefix token. Only valid prefix tokens are [<variable><keyword><number>-(]"}
+		return nil, &ParseError{tokenType, invalidPrefixToken}
 	} else {
 		return prefixParselet, nil
 	}
@@ -32,7 +32,7 @@ func getPrefixParselet(tokenType lexer.TokenType) (PrefixParselet, error) {
 
 func getInfixParselet(tokenType lexer.TokenType) (InfixParselet, error) {
 	if infixParselet, ok := infixParselets[tokenType]; !ok {
-		return nil, &ParseError{tokenType, "Invalid infix token. Only valid infix tokens are [+-/*^(=]"}
+		return nil, &ParseError{tokenType, invalidInfixToken}
 	} else {
 		return infixParselet, nil
 	}
