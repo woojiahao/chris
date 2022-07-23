@@ -121,8 +121,9 @@ func TestPrecedence(t *testing.T) {
 	assertCases(t, cases)
 }
 
-func TestAssociativity(t *testing.T) {
+func TestLeftAssociativity(t *testing.T) {
 	cases := []parserCase{
+		// The others have shown right associativity
 		assertParserCase("a = b = c", AssignmentNode{"a", AssignmentNode{"b", VariableNode("c")}}),
 		assertParserCase("a = b = c = d", AssignmentNode{"a", AssignmentNode{"b", AssignmentNode{"c", VariableNode("d")}}}),
 		assertParserCase("a ^ b ^ c", OperatorNode{VariableNode("a"), OperatorNode{VariableNode("b"), VariableNode("c"), lexer.Exponent}, lexer.Exponent}),
