@@ -159,9 +159,20 @@ func TestOperatorlessExpression_Assert(t *testing.T) {
 	cases := []parserCase{
 		assertParserCase("3x", OperatorNode{NumberNode(3), VariableNode("x"), lexer.Multiply}),
 		assertParserCase("3pi", OperatorNode{NumberNode(3), KeywordNode("pi"), lexer.Multiply}),
+		assertParserCase("3xsin(3x)", OperatorNode{
+			NumberNode(3),
+			OperatorNode{
+				VariableNode("x"),
+				FunctionNode{"sin", []Node{OperatorNode{NumberNode(3), VariableNode("x"), lexer.Multiply}}},
+				lexer.Multiply,
+			},
+			lexer.Multiply,
+		}),
 		assertParserCase("3sin(x)", OperatorNode{NumberNode(3), FunctionNode{"sin", []Node{VariableNode("x")}}, lexer.Multiply}),
 		assertParserCase("x(1 + 2 * 3)", OperatorNode{VariableNode("x"), OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Multiply}, lexer.Add}, lexer.Multiply}),
 		assertParserCase("3 -4", OperatorNode{NumberNode(3), NumberNode(4), lexer.Minus}),
+		assertParserCase("3 + 5x", OperatorNode{NumberNode(3), OperatorNode{NumberNode(5), VariableNode("x"), lexer.Multiply}, lexer.Add}),
+		assertParserCase("3 + 4pi", OperatorNode{NumberNode(3), OperatorNode{NumberNode(4), KeywordNode("pi"), lexer.Multiply}, lexer.Add}),
 	}
 	assertCases(t, cases)
 }
