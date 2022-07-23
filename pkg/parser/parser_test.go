@@ -51,7 +51,7 @@ func TestFunctionNode_Assert(t *testing.T) {
 		assertParserCase("tan(x, y, z)", FunctionNode{"tan", []Node{VariableNode("x"), VariableNode("y"), VariableNode("z")}}),
 		assertParserCase("csc(1)", FunctionNode{"csc", []Node{NumberNode(1)}}),
 		assertParserCase("sec(1, 2, 17)", FunctionNode{"sec", []Node{NumberNode(1), NumberNode(2), NumberNode(17)}}),
-		assertParserCase("cot(pi)", FunctionNode{"cot", []Node{KeywordNode("pi")}}),
+		assertParserCase("cot(pi)", FunctionNode{"cot", []Node{ConstantNode("pi")}}),
 	}
 	assertCases(t, cases)
 }
@@ -112,7 +112,7 @@ func TestPrecedence(t *testing.T) {
 
 		// <keyword> == <variable>
 		assertParserCase("2 + pi + pi", OperatorNode{OperatorNode{NumberNode(2), KeywordNode("pi"), lexer.Add}, VariableNode("pi"), lexer.Add}),
-		assertParserCase("pi + pi + pi", OperatorNode{OperatorNode{KeywordNode("pi"), KeywordNode("pi"), lexer.Add}, VariableNode("pi"), lexer.Add}),
+		assertParserCase("pi + pi + pi", OperatorNode{OperatorNode{ConstantNode("pi"), ConstantNode("pi"), lexer.Add}, ConstantNode("pi"), lexer.Add}),
 
 		// <function call> > <operator> (since ^ is greatest among all ops, we can just use it as point of reference)
 		assertParserCase("2 ^ sin(1 + 2 * 3)", OperatorNode{NumberNode(2), FunctionNode{"sin", []Node{OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Multiply}, lexer.Add}}}, lexer.Exponent}),
@@ -158,7 +158,7 @@ func TestOperatorlessExpression_Assert(t *testing.T) {
 	// Operatorless expressions are those that are missing an operator between 2 differing sub-expressions
 	cases := []parserCase{
 		assertParserCase("3x", OperatorNode{NumberNode(3), VariableNode("x"), lexer.Multiply}),
-		assertParserCase("3pi", OperatorNode{NumberNode(3), KeywordNode("pi"), lexer.Multiply}),
+		assertParserCase("3pi", OperatorNode{NumberNode(3), ConstantNode("pi"), lexer.Multiply}),
 		assertParserCase("3xsin(3x)", OperatorNode{
 			NumberNode(3),
 			OperatorNode{
@@ -172,7 +172,7 @@ func TestOperatorlessExpression_Assert(t *testing.T) {
 		assertParserCase("x(1 + 2 * 3)", OperatorNode{VariableNode("x"), OperatorNode{NumberNode(1), OperatorNode{NumberNode(2), NumberNode(3), lexer.Multiply}, lexer.Add}, lexer.Multiply}),
 		assertParserCase("3 -4", OperatorNode{NumberNode(3), NumberNode(4), lexer.Minus}),
 		assertParserCase("3 + 5x", OperatorNode{NumberNode(3), OperatorNode{NumberNode(5), VariableNode("x"), lexer.Multiply}, lexer.Add}),
-		assertParserCase("3 + 4pi", OperatorNode{NumberNode(3), OperatorNode{NumberNode(4), KeywordNode("pi"), lexer.Multiply}, lexer.Add}),
+		assertParserCase("3 + 4pi", OperatorNode{NumberNode(3), OperatorNode{NumberNode(4), ConstantNode("pi"), lexer.Multiply}, lexer.Add}),
 	}
 	assertCases(t, cases)
 }
@@ -199,7 +199,9 @@ func expectParserCase(expression string, expectedReason errorReason) parserCase 
 }
 
 func setupParser(exp string) *Parser {
-	l := lexer.New(exp)
+	keywords := []string{"sin", "cos", "tan", "sec", "csc", "cot"}
+	constants := []string{"pi"}
+	l := lexer.New(exp, keywords, constants)
 	p := New(l)
 	return p
 }
@@ -258,6 +260,9 @@ func equals(n1, n2 Node) bool {
 		return v1 == v2
 	case KeywordNode:
 		v2 := n2.(KeywordNode)
+		return v1 == v2
+	case ConstantNode:
+		v2 := n2.(ConstantNode)
 		return v1 == v2
 
 	// Non-terminal nodes
