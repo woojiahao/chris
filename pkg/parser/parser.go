@@ -117,11 +117,15 @@ func (p *Parser) expect(target lexer.TokenType) bool {
 	return target == nextToken.TokenType
 }
 
+// TODO: Consider handling errors?
 func (p *Parser) expectAndConsume(target lexer.TokenType) bool {
 	if !p.expect(target) {
 		return false
 	}
 
-	p.consume()
+	_, err := p.consume()
+	if err != nil {
+		return false
+	}
 	return true
 }

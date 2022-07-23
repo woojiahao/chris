@@ -121,7 +121,10 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 			return nil, &ParseError{token.TokenType, invalidEndOfFunction}
 		}
 		// Guaranteed to consume a ) token
-		parser.consume()
+		_, err := parser.consume()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return FunctionNode{keywordNode, args}, nil
