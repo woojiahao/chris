@@ -112,8 +112,12 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 			}
 		}
 
-		// If it is ), consume, if not, don't consume
-		parser.expectAndConsume(lexer.RightParenthesis)
+		// If it's not a ), return an error
+		if !parser.expect(lexer.RightParenthesis) {
+			return nil, &ParseError{token.TokenType, "Function call incomplete without ) to end of the arguments"}
+		}
+		// Guaranteed to consume a ) token
+		parser.consume()
 	}
 
 	return FunctionNode{keywordNode, args}, nil
