@@ -31,6 +31,16 @@ func Any[V comparable](lst []V, predicate func(V) bool) bool {
 
 	return false
 }
+
+func Map[V comparable, K comparable](lst []V, operation func(V) K) []K {
+	var mapped []K
+	for _, v := range lst {
+		mapped = append(mapped, operation(v))
+	}
+
+	return mapped
+}
+
 func StrToFloat(str string) *float64 {
 	num, err := strconv.ParseFloat(str, 64)
 	if err != nil {
