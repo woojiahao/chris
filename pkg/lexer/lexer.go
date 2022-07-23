@@ -57,10 +57,9 @@ func (l *Lexer) Peek() (*Token, string) {
 	next, _ := l.nextExpression.lookAhead(j)
 
 	acceptedPairs := map[TokenType][]TokenType{
-		//Keyword: LeftParenthesis, // pi( (not supported yet until word parsing works properly)
 		Number:   {Variable, Keyword, LeftParenthesis}, // 3x, 3sin, 3(
 		Variable: {Keyword, LeftParenthesis},           // xsin, x(
-		Keyword:  {Variable},                           // pi4
+		Constant: {Variable, LeftParenthesis, Keyword}, // pi4, pi(, pisin
 	}
 	if suffix, ok := acceptedPairs[token.TokenType]; ok && utils.In(suffix, next.TokenType) {
 		nextExpression = "*" + nextExpression
