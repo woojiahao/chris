@@ -21,6 +21,7 @@ var (
 	LeftParenthesis  = TokenType{"LEFT PARENTHESIS", 5, "("}
 	RightParenthesis = TokenType{"RIGHT PARENTHESIS", -1, ")"}
 	Comma            = TokenType{"COMMA", -1, ","}
+	EndOfExpression  = TokenType{"END OF EXPRESSION", -9999, ""}
 )
 
 type Token struct {
