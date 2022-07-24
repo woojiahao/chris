@@ -178,6 +178,15 @@ func TestOperatorlessExpression_Assert(t *testing.T) {
 	}
 	assertCases(t, cases)
 }
+
+func TestOperatorlessExpression_Expect(t *testing.T) {
+	cases := []parserCase{
+		expectParserCase("5 5 + 5", invalidInfixToken),
+		expectParserCase("x3", invalidInfixToken),
+	}
+	expectCases(t, cases)
+}
+
 type parserCase struct {
 	expression     string
 	assert         Node
