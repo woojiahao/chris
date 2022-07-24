@@ -9,20 +9,20 @@ type TokenType struct {
 }
 
 var (
-	Number           = TokenType{"NUMBER", -1, ""}
-	Variable         = TokenType{"VARIABLE", -1, ""}
-	Keyword          = TokenType{"KEYWORD", -1, ""}
-	Constant         = TokenType{"CONSTANT", -1, ""}
+	Number           = TokenType{"NUMBER", 1, ""}
+	Variable         = TokenType{"VARIABLE", 1, ""}
+	Keyword          = TokenType{"KEYWORD", 1, ""}
+	Constant         = TokenType{"CONSTANT", 1, ""}
 	RightParenthesis = TokenType{"RIGHT PARENTHESIS", -1, ")"}
 	Comma            = TokenType{"COMMA", -1, ","}
 	EndOfExpression  = TokenType{"END OF EXPRESSION", -9999, ""}
-	Assignment       = TokenType{"ASSIGNMENT", 1, "="}
-	Minus            = TokenType{"MINUS", 2, "-"}
-	Add              = TokenType{"ADD", 2, "+"}
-	Divide           = TokenType{"DIVIDE", 3, "/"}
-	Multiply         = TokenType{"MULTIPLY", 3, "*"}
-	Exponent         = TokenType{"EXPONENT", 4, "^"}
-	LeftParenthesis  = TokenType{"LEFT PARENTHESIS", 5, "("}
+	Assignment       = TokenType{"ASSIGNMENT", 2, "="}
+	Minus            = TokenType{"MINUS", 3, "-"}
+	Add              = TokenType{"ADD", 3, "+"}
+	Divide           = TokenType{"DIVIDE", 4, "/"}
+	Multiply         = TokenType{"MULTIPLY", 4, "*"}
+	Exponent         = TokenType{"EXPONENT", 5, "^"}
+	LeftParenthesis  = TokenType{"LEFT PARENTHESIS", 6, "("}
 )
 
 type Token struct {
