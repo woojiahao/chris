@@ -80,8 +80,8 @@ func (l *Lexer) tokenizeKeyword(keyword string) []*Token {
 	cur := ""
 	var tokens []*Token
 
-	for i := 0; i < len(keyword); i++ {
-		cur += string(keyword[i])
+	for i, ch := range keyword {
+		cur += string(ch)
 
 		if utils.In(l.constants, cur) {
 			// If the whole cur is a constant, return the constant
@@ -95,14 +95,23 @@ func (l *Lexer) tokenizeKeyword(keyword string) []*Token {
 			continue
 		} else {
 			// Else, see if it's about to form a constant/function using fuzzy matching from the start
-			if utils.Any(l.constants, func(c string) bool { return utils.FuzzyMatch(c, cur) }) {
-				continue
-			} else if utils.Any(l.keywords, func(c string) bool { return utils.FuzzyMatch(c, cur) }) {
+			mightBe := func(lst []string) bool {
+				anyFits := utils.Any(lst, func(c string) bool {
+					// Check if constants have length <= remaining length available
+					return len(c)-len(cur) <= len(keyword)-i-1
+				})
+				anyMatch := utils.Any(lst, func(c string) bool {
+					return utils.FuzzyMatch(c, cur)
+				})
+
+				return anyFits && anyMatch
+			}
+			if mightBe(l.constants) || mightBe(l.keywords) {
 				continue
 			} else {
 				// If it's really forming nothing, convert everything thus far to a variable
-				for _, ch := range cur {
-					tokens = append(tokens, NewVariable(string(ch)))
+				for _, c := range cur {
+					tokens = append(tokens, NewVariable(string(c)))
 				}
 				cur = ""
 			}
