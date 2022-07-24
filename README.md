@@ -11,6 +11,10 @@ his [article on Pratt parsing](http://journal.stuffwithstuff.com/2011/03/19/prat
 My notes on Pratt parsing and this project can be
 found [here.](https://woojiahao.notion.site/Pratt-Parsing-Notes-a3ccdbc32a424be6bcf67f52769ebd94)
 
+`chris` hopes to allow for user input mathematical equations that can be parsed and compiled into valid Go functions
+that can be used with plotting libraries in Go like `gonum/plot`. However, there are many other ways to use such a
+library.
+
 ## Sample
 
 `chris` supports most mathematical equations that Desmos supports. Additional operators will be added down the line. To
@@ -36,12 +40,13 @@ about the roles of either component, refer below.
 
 `lexer` receives a keyword and constant list to determine how these tokens are tokenized.
 
-`parser` only requires the `lexer` to generate the AST.
+`parser` only requires the `lexer` to generate the AST. To retrieve the AST, we simply call `parser#Parse`.
 
 ```go
 package compiler
 
 import (
+	"fmt"
 	"github.com/woojiahao/chris/pkg/lexer"
 	"github.com/woojiahao/chris/pkg/parser"
 )
@@ -56,9 +61,17 @@ func New(exp string) *Compiler {
 	constants := []string{"pi"}
 	l := lexer.New(exp, keywords, constants)
 	p := parser.New(l)
+
+	// Parse expression and get AST. We ignore the err for now
+	ast, _ := p.Parse()
+	fmt.Printf("AST: %v\n", ast)
+
 	return &Compiler{l, p}
 }
 ```
+
+Refer to `example/` for a sample compiler which parses the equation and generates a function of
+type `func(float64) float64` that can be used in plotting libraries like `gonum/plot`.
 
 ## Architecture
 
