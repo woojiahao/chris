@@ -57,6 +57,11 @@ func (p *Parser) parseExpression(precedence int) (Node, error) {
 		return nil, err
 	}
 
+	if token.TokenType == lexer.EndOfExpression {
+		// If the token is EndOfExpression, return nil for both expression and error to let the parselet handle accordingly
+		return nil, nil
+	}
+
 	// Begin parsing the body to the right
 	prefixParselet, err := getPrefixParselet(token.TokenType)
 	if err != nil {

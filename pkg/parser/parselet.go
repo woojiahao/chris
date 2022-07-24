@@ -101,11 +101,6 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 		return nil, &ParseError{token.TokenType, invalidKeywordInFunctionCall}
 	}
 
-	// If the next argument is the end of the expression, indicate that the expression was incomplete
-	if parser.expect(lexer.EndOfExpression) {
-		return nil, &ParseError{token.TokenType, invalidEndOfFunction}
-	}
-
 	var args []Node
 
 	// We check if the next token is ) and if it is, we consume and don't enter the loop
@@ -117,6 +112,11 @@ func (fcp FunctionCallParselet) Parse(parser *Parser, left Node, token *lexer.To
 			arg, err := parser.parseExpression(0)
 			if err != nil {
 				return nil, err
+			}
+
+			if arg == nil {
+				// If encountered EndOfExpression without a proper parenthesis to close
+				return nil, &ParseError{token.TokenType, invalidEndOfFunction}
 			}
 			args = append(args, arg)
 
@@ -149,15 +149,16 @@ func (ap AssignmentParselet) Parse(parser *Parser, left Node, token *lexer.Token
 		return nil, &ParseError{token.TokenType, invalidVariableInAssignment}
 	}
 
-	if parser.expect(lexer.EndOfExpression) {
-		// If we reach the end of the assignment already, that is an error
-		return nil, &ParseError{token.TokenType, invalidEndOfAssignment}
-	}
-
 	right, err := parser.parseExpression(lexer.Assignment.Precedence - 1)
 	if err != nil {
 		return nil, err
 	}
+
+	if right == nil {
+		// No right expression for assignment
+		return nil, &ParseError{token.TokenType, invalidEndOfAssignment}
+	}
+
 	return AssignmentNode{variableNode, right}, nil
 }
 
